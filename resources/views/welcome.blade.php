@@ -13,7 +13,7 @@
                             <h1 class="@if(Auth::guest()) text-white @endif">{{ __('Welcome to Ngumi Network.') }}</h1>
 
                             <p class="@if(Auth::guest()) text-white @endif text-lead mt-3 mb-0">
-                                {{ __('Connecting students with organizations that  mentor, train, and empower the next generation of professionals') }}
+                                {{ __('creating a central space where fighters can connect, communicate, and arrange sparring sessions efficiently.') }}
                             </p>
                         </div>
                     </div>

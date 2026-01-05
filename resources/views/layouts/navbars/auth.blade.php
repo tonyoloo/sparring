@@ -14,7 +14,7 @@
 
         <ul class="nav">
 
-            <li class="{{ $elementActive == 'studentprofile' ? 'active' : '' }}">
+            <!-- <li class="{{ $elementActive == 'studentprofile' ? 'active' : '' }}">
                 <a href="{{ route('page.index', 'studentprofile') }}">
                     <i class="nc-icon nc-tablet-2"></i>
                     <p>{{ __('student profile') }}</p>
@@ -31,7 +31,7 @@
                 <i class="nc-icon nc-tablet-2"></i>
                 <p>{{ __(' User Profile ') }}</p>
                 </a>
-            </li>
+            </li> -->
             <li class="{{ $elementActive == 'fighter_profile' ? 'active' : '' }}">
                 <a href="{{ route('fighter.edit') }}">
                 <i class="nc-icon nc-single-02"></i>

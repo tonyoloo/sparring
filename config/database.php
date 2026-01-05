@@ -49,11 +49,11 @@ return [
 
             'driver' => 'mysql',
             // 'host' => env('DB_HOST', '192.168.1.98'),
-            'host' => env('DB_HOST', '127.0.0.1'),
+            'host' => env('DB_HOST', '192.168.100.3'),
             'port' => env('DB_PORT', '3306'),
-            'database' => env('DB_DATABASE', 'topicoke_nguminetwork'),
-            'username' => env('DB_USERNAME', 'topicoke_tony'),
-            'password' => env('DB_PASSWORD', 'Police2026@'),
+            'database' => env('DB_DATABASE', 'helb_webdata'),
+            'username' => env('DB_USERNAME', 'tony'),
+            'password' => env('DB_PASSWORD', 'ry2DiP6EznKTj5Kh'),
             'unix_socket' => env('DB_SOCKET', ''),
             'charset' => 'utf8mb4',
             'collation' => 'utf8mb4_unicode_ci',
@@ -70,7 +70,28 @@ return [
         ],
 
 
-       
+        'mysqlhef' => [
+
+
+
+            'driver' => 'mysql',
+            'host' => env('DB_HOST', 'https://portal.hef.co.ke/'),
+            'port' => env('DB_PORT', '3306'),
+            'database' => env('DB_DATABASE_HEF', 'students_portal'),
+            'username' => env('DB_USERNAME_HEF', 'helb'),
+            'password' => env('DB_PASSWORD_HEF', 'L5yUm0bOjxB)E#*mM1'),
+            'unix_socket' => env('DB_SOCKET_HEF', ''),
+            'charset' => 'utf8mb4',
+            'collation' => 'utf8mb4_unicode_ci',
+            'prefix' => '',
+            'strict' => true,
+            'engine' => null,
+            'max_connections' => 0, // Set to 0 for unlimited connections
+
+            'options' => extension_loaded('pdo_mysql') ? array_filter([
+                PDO::MYSQL_ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA'),
+            ]) : [],
+        ],
 
 
 
@@ -78,6 +99,41 @@ return [
 
 
 
+
+       'sqlsrv' => [
+            'driver' => 'sqlsrv',
+            //'url' => env('DATABASE_URL'),
+            'host' => env('DB_SQLSRV_HOST', '192.168.1.46\PRODAXDB'),
+           // 'port' => env('DB_PORT', '1433'),
+            'database' => env('DB_SQLSRV_DATABASE', 'HELBDynamicsAX'),
+            'username' => env('DB_SQLSRV_USERNAME', 'Mpesa'),
+            'password' => env('DB_SQLSRV_PASSWORD', 'NScZ93aAjZVscY4i'),
+            'charset' => 'UTF-8',
+            'ConnectionPooling' => true,
+            'encrypt' => env('DB_SQLSRV_ENCRYPT', 'no'),
+
+            //'prefix' => '',
+           // 'prefix_indexes' => true,
+            // 'encrypt' => env('DB_ENCRYPT', 'yes'),
+            // 'trust_server_certificate' => env('DB_TRUST_SERVER_CERTIFICATE', 'false'),
+        ],
+        'sqlsrvsms' => [
+            'driver' => 'sqlsrv',
+            //'url' => env('DATABASE_URL'),
+            'host' => env('DB_SQLSRV_HOST', '192.168.1.46\PRODAXDB'),
+           // 'port' => env('DB_PORT', '1433'),
+            'database' => 'sky_solutions_db',
+            'username' => 'helbportalsms',
+            'password' => 'uBibfBMbwM9u&Gd$#!fgQ',
+            'charset' => 'UTF-8',
+            'ConnectionPooling' => true,
+            'encrypt' => env('DB_SQLSRV_ENCRYPT', 'no'),
+
+            //'prefix' => '',
+           // 'prefix_indexes' => true,
+            // 'encrypt' => env('DB_ENCRYPT', 'yes'),
+            // 'trust_server_certificate' => env('DB_TRUST_SERVER_CERTIFICATE', 'false'),
+        ],
         'pgsql' => [
             'driver' => 'pgsql',
             'url' => env('DATABASE_URL'),

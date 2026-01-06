@@ -32,27 +32,13 @@
                             @ {{ __(auth()->user()->name)}}
                             </p>
                         </div>
-                        @if(isset($studentdata))
-                            <div class="mt-3">
-                                <h6>Student Data</h6>
-                                <ul class="list-group text-left">
-                                    <li class="list-group-item"><strong>First Name:</strong> {{ $studentdata->first_name }}</li>
-                                    <li class="list-group-item"><strong>Last Name:</strong> {{ $studentdata->last_name }}</li>
-                                    <li class="list-group-item"><strong>Email:</strong> {{ $studentdata->email }}</li>
-                                    <li class="list-group-item"><strong>Phone:</strong> {{ $studentdata->phone }}</li>
-                                    <li class="list-group-item"><strong>Gender:</strong> {{ $studentdata->gender }}</li>
-                                    <li class="list-group-item"><strong>ID Number:</strong> {{ $studentdata->id_number }}</li>
-                                    <li class="list-group-item"><strong>Institution:</strong> {{ $studentdata->institution_name }}</li>
-                                    <li class="list-group-item"><strong>Course:</strong> {{ $studentdata->course }}</li>
-                                    <li class="list-group-item"><strong>Year of Study:</strong> {{ $studentdata->year_of_study }}</li>
-                                    <li class="list-group-item"><strong>County:</strong> {{ $studentdata->county }}</li>
-                                    <li class="list-group-item"><strong>Town:</strong> {{ $studentdata->town }}</li>
-                                    <li class="list-group-item"><strong>Attachment From:</strong> {{ $studentdata->attachment_from }}</li>
-                                    <li class="list-group-item"><strong>Attachment To:</strong> {{ $studentdata->attachment_to }}</li>
-                                    <li class="list-group-item"><strong>Department:</strong> {{ $studentdata->department }}</li>
-                                </ul>
-                            </div>
-                        @endif
+                        <div class="mt-3">
+                            <h6>User Information</h6>
+                            <ul class="list-group text-left">
+                                <li class="list-group-item"><strong>Name:</strong> {{ $user->name }}</li>
+                                <li class="list-group-item"><strong>Email:</strong> {{ $user->email }}</li>
+                            </ul>
+                        </div>
                     </div>
                   
                 </div>

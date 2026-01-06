@@ -19,8 +19,7 @@ class ProfileController extends Controller
     public function edit()
     {
         $user = auth()->user();
-        $studentdata = \App\Models\StudentData::where('user_id', $user->id)->first();
-        return view('profile.edit', compact('studentdata'));
+        return view('profile.edit', compact('user'));
     }
 
     /**

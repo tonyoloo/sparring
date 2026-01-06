@@ -46,65 +46,6 @@
                             @method('PUT')
 
                             <div class="card-body">
-                                <!-- Profile Images Section -->
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <h5 class="mb-3">Profile Images</h5>
-
-                                        <!-- Current Photos Display -->
-                                        <div id="currentPhotos" class="row mb-4">
-                                            @forelse($fighter->photos ?? [] as $photo)
-                                                <div class="col-md-4 mb-3">
-                                                    <div class="photo-item card">
-                                                        <img src="{{ $photo->photo_url }}"
-                                                             alt="{{ $photo->photo_name ?? 'Photo' }}"
-                                                             class="card-img-top"
-                                                             style="height: 150px; object-fit: cover;">
-                                                        <div class="card-body p-2">
-                                                            <div class="d-flex justify-content-between align-items-center">
-                                                                <small class="text-muted">
-                                                                    @if($photo->is_primary)
-                                                                        <i class="fa fa-star text-warning"></i> Primary
-                                                                    @else
-                                                                        Photo {{ $loop->iteration }}
-                                                                    @endif
-                                                                </small>
-                                                                <div>
-                                                                    @if(!$photo->is_primary)
-                                                                        <form action="{{ route('fighter.photo.make-primary', $photo->id) }}"
-                                                                              method="POST" class="d-inline">
-                                                                            @csrf
-                                                                            @method('PATCH')
-                                                                            <button type="submit" class="btn btn-outline-warning btn-sm"
-                                                                                    title="Make Primary">
-                                                                                <i class="fa fa-star"></i>
-                                                                            </button>
-                                                                        </form>
-                                                                    @endif
-                                                                    <form action="{{ route('fighter.photo.delete', $photo->id) }}"
-                                                                          method="POST" class="d-inline">
-                                                                        @csrf
-                                                                        @method('DELETE')
-                                                                        <button type="submit" class="btn btn-outline-danger btn-sm"
-                                                                                title="Delete Photo"
-                                                                                onclick="return confirm('Are you sure you want to delete this photo?')">
-                                                                            <i class="fa fa-trash"></i>
-                                                                        </button>
-                                                                    </form>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            @empty
-                                                <div class="col-md-12">
-                                                    <div class="text-center p-4 bg-light rounded">
-                                                        <i class="fa fa-camera fa-2x text-muted mb-2"></i>
-                                                        <p class="text-muted">No photos uploaded yet</p>
-                                                    </div>
-                                                </div>
-                                            @endforelse
-                                        </div>
 
                                         <!-- Photo Upload Section -->
                                         <div class="photo-upload-section">
@@ -135,7 +76,7 @@
                                         <div class="col-md-6">
                                             <div class="form-group">
                                                 <label>Country</label>
-                                                <select name="country" id="country_select" class="form-control">
+                                                <select name="country_id" id="country_select" class="form-control">
                                                     <option value="">Select Country</option>
                                                     <!-- Countries will be loaded dynamically -->
                                                 </select>
@@ -147,19 +88,17 @@
                                         <div class="col-md-6">
                                             <div class="form-group">
                                                 <label>City</label>
-                                                <select name="city" id="city_select" class="form-control" disabled>
+                                                <select name="city_id" id="city_select" class="form-control" disabled>
                                                     <option value="">Select Country First</option>
                                                 </select>
                                             </div>
                                         </div>
                                         <div class="col-md-6">
-                                            <!-- Keep region as hidden field for backward compatibility -->
-                                            <input type="hidden" name="region" id="region_hidden" value="{{ $fighter->region }}">
                                 </div>
 
                                 @if($fighter->category === 'fighters')
                                     <!-- Fighter Specific Fields -->
-                                    <h5 class="mt-4 mb-3">Fighting Information</h5>
+                                    <!-- <h5 class="mt-4 mb-3">Fighting Information</h5> -->
 
                                     <div class="row">
                                         <div class="col-md-4">
@@ -394,7 +333,7 @@
 
                                 <!-- Bio/About Section for all types -->
                                 @if($fighter->category !== 'gyms')
-                                    <h5 class="mt-4 mb-3">About You</h5>
+                                    <!-- <h5 class="mt-4 mb-3">About You</h5> -->
                                     <div class="row">
                                         <div class="col-md-12">
                                             <div class="form-group">
@@ -419,6 +358,73 @@
                                 </div>
                             </div>
                         </form>
+
+                        <!-- Profile Images Section (Outside main form to avoid nesting) -->
+                        <div class="row mt-4">
+                            <div class="col-md-12">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h5 class="mb-0">Profile Images</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <!-- Current Photos Display -->
+                                        <div id="currentPhotos" class="row mb-4">
+                                            @forelse($fighter->photos ?? [] as $photo)
+                                                <div class="col-md-4 mb-3">
+                                                    <div class="photo-item card">
+                                                        <img src="{{ $photo->photo_url }}"
+                                                             alt="{{ $photo->photo_name ?? 'Photo' }}"
+                                                             class="card-img-top"
+                                                             style="height: 150px; object-fit: cover;">
+                                                        <div class="card-body p-2">
+                                                            <div class="d-flex justify-content-between align-items-center">
+                                                                <small class="text-muted">
+                                                                    @if($photo->is_primary)
+                                                                        <i class="fa fa-star text-warning"></i> Primary
+                                                                    @else
+                                                                        Photo {{ $loop->iteration }}
+                                                                    @endif
+                                                                </small>
+                                                                <div>
+                                                                    @if(!$photo->is_primary)
+                                                                        <form action="{{ route('fighter.photo.make-primary', $photo->id) }}"
+                                                                              method="POST" class="d-inline">
+                                                                            @csrf
+                                                                            @method('PATCH')
+                                                                            <button type="submit" class="btn btn-outline-warning btn-sm"
+                                                                                    title="Make Primary">
+                                                                                <i class="fa fa-star"></i>
+                                                                            </button>
+                                                                        </form>
+                                                                    @endif
+                                                                    <form action="{{ route('fighter.photo.delete', $photo->id) }}"
+                                                                          method="POST" class="d-inline">
+                                                                        @csrf
+                                                                        @method('DELETE')
+                                                                        <button type="submit" class="btn btn-outline-danger btn-sm"
+                                                                                title="Delete Photo"
+                                                                                onclick="return confirm('Are you sure you want to delete this photo?')">
+                                                                            <i class="fa fa-trash"></i>
+                                                                        </button>
+                                                                    </form>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            @empty
+                                                <div class="col-md-12">
+                                                    <div class="text-center p-4 bg-light rounded">
+                                                        <i class="fa fa-camera fa-2x text-muted mb-2"></i>
+                                                        <p class="text-muted">No photos uploaded yet</p>
+                                                    </div>
+                                                </div>
+                                            @endforelse
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
                 @else
@@ -489,16 +495,12 @@ $(document).ready(function() {
             loadCities(countryId);
         } else {
             $('#city_select').html('<option value="">Select Country First</option>').prop('disabled', true);
-            $('#region_hidden').val('');
         }
     });
 
-    // City change handler - update hidden region field for backward compatibility
+    // City change handler - no need for hidden field anymore
     $(document).on('change', '#city_select', function() {
-        var cityId = $(this).val();
-        var selectedOption = $(this).find('option:selected');
-        var region = selectedOption.data('region') || '';
-        $('#region_hidden').val(region);
+        // City ID is sent directly via the form field
     });
 
     // Form validation
@@ -515,9 +517,18 @@ $(document).ready(function() {
                 if (response.success) {
                     var options = '<option value="">Select Country</option>';
                     response.data.forEach(function(country) {
-                        options += '<option value="' + country.id + '">' + country.name + '</option>';
+                        var selected = '{{ $currentCountryId }}' == country.id ? 'selected' : '';
+                        options += '<option value="' + country.id + '" ' + selected + '>' + country.name + '</option>';
                     });
                     $('#country_select').html(options);
+
+                    // If a country is pre-selected, load its cities
+                    if ('{{ $currentCountryId }}') {
+                        loadCities('{{ $currentCountryId }}');
+                    }
+
+                    // Set initial values for country and city selects
+                    // Values are set directly via the select options above
                 }
             },
             error: function() {
@@ -535,8 +546,8 @@ $(document).ready(function() {
                 if (response.success) {
                     var options = '<option value="">Select City</option>';
                     response.data.forEach(function(city) {
-                        var selected = '{{ $fighter->region }}' === city.region ? 'selected' : '';
-                        options += '<option value="' + city.id + '" data-region="' + city.region + '" ' + selected + '>' + city.name + '</option>';
+                        var selected = '{{ $currentCityId }}' == city.id ? 'selected' : '';
+                        options += '<option value="' + city.id + '" ' + selected + '>' + city.name + '</option>';
                     });
                     $('#city_select').html(options).prop('disabled', false);
                 }

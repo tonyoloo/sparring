@@ -51,9 +51,9 @@
                                                 {{ ucfirst($targetFighter->experience ?? 'Unknown') }} •
                                                 {{ ucfirst($targetFighter->level ?? 'Unknown') }}
                                             </p>
-                                            @if($targetFighter->region)
+                                            @if($targetFighter->location && $targetFighter->location !== 'Unknown Location')
                                                 <small class="text-muted d-block">
-                                                    <i class="fa fa-map-marker"></i> {{ ucwords(str_replace('_', ' ', $targetFighter->region)) }}
+                                                    <i class="fa fa-map-marker"></i> {{ $targetFighter->location }}
                                                 </small>
                                             @endif
                                             @if($targetFighter->spar_amount && $targetFighter->spar_amount > 0)

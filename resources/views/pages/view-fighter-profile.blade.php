@@ -12,7 +12,7 @@
                         <div class="row align-items-center">
                             <div class="col-md-8">
                                 <h4 class="card-title">{{ $fighter->name }}'s Profile</h4>
-                                <p class="card-category">{{ ucfirst($fighter->category) }} • {{ ucwords(str_replace('_', ' ', $fighter->region ?? 'Unknown Region')) }}</p>
+                                <p class="card-category">{{ ucfirst($fighter->category) }} • {{ $fighter->location }}</p>
                             </div>
                             <div class="col-md-4 text-right">
                                 <a href="{{ route('directory') }}" class="btn btn-secondary btn-sm">

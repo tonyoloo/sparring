@@ -293,6 +293,14 @@
                                                         </small>
                                                     </div>
 
+                                                    @if($fighter->location && $fighter->location !== 'Unknown Location')
+                                                        <div class="mb-2">
+                                                            <small class="text-muted">
+                                                                <i class="fa fa-map-marker"></i> {{ $fighter->location }}
+                                                            </small>
+                                                        </div>
+                                                    @endif
+
                                                     @if($fighter->spar_amount && $fighter->spar_amount > 0)
                                                         <div class="mb-2">
                                                             <span class="badge badge-success">

@@ -184,10 +184,10 @@
                                                         </div>
                                                     @endif
 
-                                                    @if($gym->region)
+                                                    @if($gym->location && $gym->location !== 'Unknown Location')
                                                         <div class="mb-2">
                                                             <small class="text-muted">
-                                                                <i class="fa fa-map-marker"></i> {{ ucwords(str_replace('_', ' ', $gym->region)) }}
+                                                                <i class="fa fa-map-marker"></i> {{ $gym->location }}
                                                             </small>
                                                         </div>
                                                     @endif

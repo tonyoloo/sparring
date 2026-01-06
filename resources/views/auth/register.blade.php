@@ -508,32 +508,42 @@
                             <div id="common_fields" style="display: none;">
                                 <h5 class="text-left mt-3 mb-3">Location Information</h5>
 
-                                <div class="input-group{{ $errors->has('region') ? ' has-danger' : '' }}">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text">
-                                            <i class="nc-icon nc-pin-3"></i>
-                                        </span>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="input-group{{ $errors->has('country_id') ? ' has-danger' : '' }}">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text">
+                                                    <i class="nc-icon nc-globe"></i>
+                                                </span>
+                                            </div>
+                                            <select name="country_id" id="registration_country_select" class="form-control">
+                                                <option value="">Select Country</option>
+                                                <!-- Countries will be loaded dynamically -->
+                                            </select>
+                                            @if ($errors->has('country_id'))
+                                            <span class="invalid-feedback" style="display: block;" role="alert">
+                                                <strong>{{ $errors->first('country_id') }}</strong>
+                                            </span>
+                                            @endif
+                                        </div>
                                     </div>
-                                    <select name="region" class="form-control">
-                                        <option value="">Select Region</option>
-                                        <option value="east" {{ old('region') == 'east' ? 'selected' : '' }}>East</option>
-                                        <option value="south_east" {{ old('region') == 'south_east' ? 'selected' : '' }}>South East</option>
-                                        <option value="south_west" {{ old('region') == 'south_west' ? 'selected' : '' }}>South West</option>
-                                        <option value="west_midlands" {{ old('region') == 'west_midlands' ? 'selected' : '' }}>West Midlands</option>
-                                        <option value="london" {{ old('region') == 'london' ? 'selected' : '' }}>London</option>
-                                        <option value="north_east" {{ old('region') == 'north_east' ? 'selected' : '' }}>North East</option>
-                                        <option value="north_west" {{ old('region') == 'north_west' ? 'selected' : '' }}>North West</option>
-                                        <option value="yorkshire_humber" {{ old('region') == 'yorkshire_humber' ? 'selected' : '' }}>Yorkshire & Humber</option>
-                                        <option value="east_midlands" {{ old('region') == 'east_midlands' ? 'selected' : '' }}>East Midlands</option>
-                                        <option value="northern_ireland" {{ old('region') == 'northern_ireland' ? 'selected' : '' }}>Northern Ireland</option>
-                                        <option value="scotland" {{ old('region') == 'scotland' ? 'selected' : '' }}>Scotland</option>
-                                        <option value="wales" {{ old('region') == 'wales' ? 'selected' : '' }}>Wales</option>
-                                    </select>
-                                    @if ($errors->has('region'))
-                                    <span class="invalid-feedback" style="display: block;" role="alert">
-                                        <strong>{{ $errors->first('region') }}</strong>
-                                    </span>
-                                    @endif
+                                    <div class="col-md-6">
+                                        <div class="input-group{{ $errors->has('city_id') ? ' has-danger' : '' }}">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text">
+                                                    <i class="nc-icon nc-pin-3"></i>
+                                                </span>
+                                            </div>
+                                            <select name="city_id" id="registration_city_select" class="form-control" disabled>
+                                                <option value="">Select Country First</option>
+                                            </select>
+                                            @if ($errors->has('city_id'))
+                                            <span class="invalid-feedback" style="display: block;" role="alert">
+                                                <strong>{{ $errors->first('city_id') }}</strong>
+                                            </span>
+                                            @endif
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                             <div class="form-check text-left">
@@ -580,12 +590,25 @@
             if (selectedType === 'fighter') {
                 $('#fighter_fields').show();
                 $('#common_fields').show();
+                loadRegistrationCountries();
             } else if (selectedType === 'professional') {
                 $('#professional_fields').show();
                 $('#common_fields').show();
+                loadRegistrationCountries();
             } else if (selectedType === 'gym') {
                 $('#gym_fields').show();
                 $('#common_fields').show();
+                loadRegistrationCountries();
+            }
+        });
+
+        // Country change handler for registration
+        $(document).on('change', '#registration_country_select', function() {
+            var countryId = $(this).val();
+            if (countryId) {
+                loadRegistrationCities(countryId);
+            } else {
+                $('#registration_city_select').html('<option value="">Select Country First</option>').prop('disabled', true);
             }
         });
 
@@ -594,5 +617,45 @@
             $('#registration_type').trigger('change');
         }
     });
+
+    function loadRegistrationCountries() {
+        $.ajax({
+            url: '{{ route("api.countries") }}',
+            type: 'GET',
+            success: function(response) {
+                if (response.success) {
+                    var options = '<option value="">Select Country</option>';
+                    response.data.forEach(function(country) {
+                        options += '<option value="' + country.id + '">' + country.name + '</option>';
+                    });
+                    $('#registration_country_select').html(options);
+                }
+            },
+            error: function() {
+                console.error('Error loading countries');
+            }
+        });
+    }
+
+    function loadRegistrationCities(countryId) {
+        $.ajax({
+            url: '{{ route("api.cities") }}',
+            type: 'GET',
+            data: { country_id: countryId },
+            success: function(response) {
+                if (response.success) {
+                    var options = '<option value="">Select City</option>';
+                    response.data.forEach(function(city) {
+                        options += '<option value="' + city.id + '">' + city.name + '</option>';
+                    });
+                    $('#registration_city_select').html(options).prop('disabled', false);
+                }
+            },
+            error: function() {
+                console.error('Error loading cities');
+                $('#registration_city_select').html('<option value="">Error loading cities</option>');
+            }
+        });
+    }
 </script>
 @endpush

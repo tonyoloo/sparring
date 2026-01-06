@@ -18,7 +18,8 @@ class Fighter extends Model
         'name',
         'email',
         'gender',
-        'region',
+        'country_id',
+        'city_id',
         'discipline',
         'stance',
         'experience',
@@ -75,11 +76,19 @@ class Fighter extends Model
     }
 
     /**
-     * Get fighters by region scope
+     * Get fighters by country scope
      */
-    public function scopeByRegion($query, $region)
+    public function scopeByCountry($query, $countryId)
     {
-        return $query->where('region', $region);
+        return $query->where('country_id', $countryId);
+    }
+
+    /**
+     * Get fighters by city scope
+     */
+    public function scopeByCity($query, $cityId)
+    {
+        return $query->where('city_id', $cityId);
     }
 
     /**
@@ -96,5 +105,71 @@ class Fighter extends Model
     public function primaryPhoto()
     {
         return $this->hasOne(FighterPhoto::class)->where('is_primary', true);
+    }
+
+    /**
+     * Get the country associated with this fighter.
+     */
+    public function country()
+    {
+        return $this->belongsTo(Country::class, 'country_id');
+    }
+
+    /**
+     * Get the city associated with this fighter.
+     */
+    public function city()
+    {
+        return $this->belongsTo(City::class, 'city_id');
+    }
+
+    /**
+     * Get formatted location string (City, Country).
+     */
+    public function getLocationAttribute()
+    {
+        // If relationships are loaded, use them
+        if ($this->relationLoaded('city') && $this->relationLoaded('country')) {
+            $city = $this->getRelation('city');
+            $country = $this->getRelation('country');
+
+            if ($city && $country) {
+                return $city->name . ', ' . $country->name;
+            } elseif ($country) {
+                return $country->name;
+            } elseif ($city) {
+                return $city->name;
+            }
+        }
+
+        // Use the new country_id and city_id columns
+        $location = '';
+
+        if ($this->city_id) {
+            $city = City::find($this->city_id);
+            if ($city) {
+                $country = $city->country;
+                $location = $country ? $city->name . ', ' . $country->name : $city->name;
+            }
+        } elseif ($this->country_id) {
+            $country = Country::find($this->country_id);
+            if ($country) {
+                $location = $country->name;
+            }
+        }
+
+        // Fallback to region if new columns are empty (backward compatibility)
+        if (empty($location) && $this->region) {
+            $city = City::find($this->region);
+            if ($city) {
+                $country = $city->country;
+                $location = $country ? $city->name . ', ' . $country->name : $city->name;
+            } else {
+                $country = Country::find($this->region);
+                if ($country) $location = $country->name;
+            }
+        }
+
+        return $location ?: 'Unknown Location';
     }
 }

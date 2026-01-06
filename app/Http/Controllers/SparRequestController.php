@@ -50,7 +50,7 @@ class SparRequestController extends Controller
             return redirect()->route('fighter.edit')->with('error', 'You need a fighter profile to send spar requests.');
         }
 
-        $targetFighter = Fighter::findOrFail($fighterId);
+        $targetFighter = Fighter::with(['photos', 'country', 'city'])->findOrFail($fighterId);
 
         // Check if user is trying to request themselves
         if ($currentFighter->id === $targetFighter->id) {
@@ -85,7 +85,7 @@ class SparRequestController extends Controller
             return redirect()->route('fighter.edit')->with('error', 'You need a fighter profile to send spar requests.');
         }
 
-        $targetFighter = Fighter::findOrFail($fighterId);
+        $targetFighter = Fighter::with(['photos', 'country', 'city'])->findOrFail($fighterId);
 
         // Validate request
         $validator = Validator::make($request->all(), [

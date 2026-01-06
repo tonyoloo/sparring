@@ -189,10 +189,10 @@
                                                         </small>
                                                     </div>
 
-                                                    @if($professional->region)
+                                                    @if($professional->location && $professional->location !== 'Unknown Location')
                                                         <div class="mb-2">
                                                             <small class="text-muted">
-                                                                <i class="fa fa-map-marker"></i> {{ ucwords(str_replace('_', ' ', $professional->region)) }}
+                                                                <i class="fa fa-map-marker"></i> {{ $professional->location }}
                                                             </small>
                                                         </div>
                                                     @endif

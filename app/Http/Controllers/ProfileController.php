@@ -30,7 +30,18 @@ class ProfileController extends Controller
      */
     public function editFighter()
     {
-        return view('pages.fighter-profile');
+        $user = auth()->user();
+        $fighter = $user->fighter;
+
+        if (!$fighter) {
+            return redirect()->route('profile.edit')->withErrors(['error' => 'Fighter profile not found.']);
+        }
+
+        // Determine current country and city for pre-selection
+        $currentCountryId = $fighter->country_id;
+        $currentCityId = $fighter->city_id;
+
+        return view('pages.fighter-profile', compact('fighter', 'currentCountryId', 'currentCityId'));
     }
 
     /**
@@ -77,7 +88,8 @@ class ProfileController extends Controller
         // Base validation rules
         $rules = [
             'name' => 'required|string|max:255',
-            'region' => 'nullable|string',
+            'country_id' => 'nullable|exists:countries,id',
+            'city_id' => 'nullable|exists:cities,id',
             'profile_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // 2MB max
             'fighter_photos' => 'nullable|array|max:3',
             'fighter_photos.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048',

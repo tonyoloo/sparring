@@ -93,7 +93,8 @@ class RegisterController extends Controller
 
             // Common fields for all types
             $rules = array_merge($rules, [
-                'region' => ['nullable', 'string'],
+                'country_id' => ['nullable', 'exists:countries,id'],
+                'city_id' => ['nullable', 'exists:cities,id'],
             ]);
         }
 
@@ -133,7 +134,8 @@ class RegisterController extends Controller
             'name' => $data['name'],
             'email' => $data['email'],
             'category' => $data['registration_type'],
-            'region' => $data['region'] ?? null,
+            'country_id' => $data['country_id'] ?? null,
+            'city_id' => $data['city_id'] ?? null,
             'is_active' => true,
         ];
 

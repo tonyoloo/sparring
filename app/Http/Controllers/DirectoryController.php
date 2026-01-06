@@ -49,7 +49,7 @@ class DirectoryController extends Controller
      */
     public function show($id)
     {
-        $fighter = Fighter::with('photos')->findOrFail($id);
+        $fighter = Fighter::with(['photos', 'country', 'city'])->findOrFail($id);
 
         return view('pages.view-fighter-profile', compact('fighter'));
     }
@@ -63,7 +63,7 @@ class DirectoryController extends Controller
      */
     private function getDirectoryResults(Request $request, $category)
     {
-        $query = Fighter::with('photos')->where('category', $category);
+        $query = Fighter::with(['photos', 'country', 'city'])->where('category', $category);
 
         // Search by name
         if ($request->filled('search')) {
@@ -78,15 +78,12 @@ class DirectoryController extends Controller
 
         // Filter by country
         if ($request->filled('country')) {
-            // For now, we'll still filter by region since we haven't migrated to country/city IDs yet
-            // This will be updated once the migration is complete
-            $query->where('region', 'like', '%' . $request->country . '%');
+            $query->where('country_id', $request->country);
         }
 
         // Filter by city
         if ($request->filled('city')) {
-            // For now, we'll still filter by region since we haven't migrated to country/city IDs yet
-            $query->where('region', $request->city);
+            $query->where('city_id', $request->city);
         }
 
         // Filter by discipline

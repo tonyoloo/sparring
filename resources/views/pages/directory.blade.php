@@ -80,24 +80,23 @@
                                         </div>
                                     </div>
 
-                                    <!-- Region Filter -->
-                                    <div class="col-md-3">
+                                    <!-- Country Filter -->
+                                    <div class="col-md-2">
                                         <div class="form-group">
-                                            <label>Region</label>
-                                            <select name="region" class="form-control">
-                                                <option value="">All Regions</option>
-                                                <option value="east" {{ request('region') == 'east' ? 'selected' : '' }}>East</option>
-                                                <option value="south_east" {{ request('region') == 'south_east' ? 'selected' : '' }}>South East</option>
-                                                <option value="south_west" {{ request('region') == 'south_west' ? 'selected' : '' }}>South West</option>
-                                                <option value="west_midlands" {{ request('region') == 'west_midlands' ? 'selected' : '' }}>West Midlands</option>
-                                                <option value="london" {{ request('region') == 'london' ? 'selected' : '' }}>London</option>
-                                                <option value="north_east" {{ request('region') == 'north_east' ? 'selected' : '' }}>North East</option>
-                                                <option value="north_west" {{ request('region') == 'north_west' ? 'selected' : '' }}>North West</option>
-                                                <option value="yorkshire_humber" {{ request('region') == 'yorkshire_humber' ? 'selected' : '' }}>Yorkshire & Humber</option>
-                                                <option value="east_midlands" {{ request('region') == 'east_midlands' ? 'selected' : '' }}>East Midlands</option>
-                                                <option value="northern_ireland" {{ request('region') == 'northern_ireland' ? 'selected' : '' }}>Northern Ireland</option>
-                                                <option value="scotland" {{ request('region') == 'scotland' ? 'selected' : '' }}>Scotland</option>
-                                                <option value="wales" {{ request('region') == 'wales' ? 'selected' : '' }}>Wales</option>
+                                            <label>Country</label>
+                                            <select name="country" id="country_filter" class="form-control">
+                                                <option value="">All Countries</option>
+                                                <!-- Countries will be loaded dynamically -->
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <!-- City Filter -->
+                                    <div class="col-md-2">
+                                        <div class="form-group">
+                                            <label>City</label>
+                                            <select name="city" id="city_filter" class="form-control" disabled>
+                                                <option value="">Select Country First</option>
                                             </select>
                                         </div>
                                     </div>
@@ -359,6 +358,9 @@
 @push('scripts')
 <script>
 $(document).ready(function() {
+    // Load countries on page load
+    loadCountries();
+
     // Toggle filters
     $('#toggleFilters').click(function() {
         $('#filtersSection').slideToggle();
@@ -376,10 +378,62 @@ $(document).ready(function() {
         $('#directoryForm').submit();
     });
 
+    // Country change handler
+    $(document).on('change', '#country_filter', function() {
+        var countryId = $(this).val();
+        if (countryId) {
+            loadCities(countryId);
+        } else {
+            $('#city_filter').html('<option value="">Select Country First</option>').prop('disabled', true);
+        }
+    });
+
     // Auto-submit on filter change (optional)
     // $('select').change(function() {
     //     $('#directoryForm').submit();
     // });
+
+    function loadCountries() {
+        $.ajax({
+            url: '{{ route("api.countries") }}',
+            type: 'GET',
+            success: function(response) {
+                if (response.success) {
+                    var options = '<option value="">All Countries</option>';
+                    response.data.forEach(function(country) {
+                        var selected = '{{ request("country") }}' === country.id.toString() ? 'selected' : '';
+                        options += '<option value="' + country.id + '" ' + selected + '>' + country.name + '</option>';
+                    });
+                    $('#country_filter').html(options);
+                }
+            },
+            error: function() {
+                console.error('Error loading countries');
+            }
+        });
+    }
+
+    function loadCities(countryId) {
+        $.ajax({
+            url: '{{ route("api.cities") }}',
+            type: 'GET',
+            data: { country_id: countryId },
+            success: function(response) {
+                if (response.success) {
+                    var options = '<option value="">All Cities</option>';
+                    response.data.forEach(function(city) {
+                        var selected = '{{ request("city") }}' === city.id.toString() ? 'selected' : '';
+                        options += '<option value="' + city.id + '" ' + selected + '>' + city.name + '</option>';
+                    });
+                    $('#city_filter').html(options).prop('disabled', false);
+                }
+            },
+            error: function() {
+                console.error('Error loading cities');
+                $('#city_filter').html('<option value="">Error loading cities</option>');
+            }
+        });
+    }
 });
 </script>
 @endpush

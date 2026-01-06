@@ -48,12 +48,11 @@ return [
 
 
             'driver' => 'mysql',
-            // 'host' => env('DB_HOST', '192.168.1.98'),
-            'host' => env('DB_HOST', '127.0.0.1'),
+             'host' => env('DB_HOST', '192.168.100.3'),
             'port' => env('DB_PORT', '3306'),
-            'database' => env('DB_DATABASE', 'topicoke_nguminetwork'),
-            'username' => env('DB_USERNAME', 'topicoke_tony'),
-            'password' => env('DB_PASSWORD', 'Police2026@'),
+            'database' => env('DB_DATABASE', 'helb_webdata'),
+            'username' => env('DB_USERNAME', 'tony'),
+            'password' => env('DB_PASSWORD', 'ry2DiP6EznKTj5Kh'),
             'unix_socket' => env('DB_SOCKET', ''),
             'charset' => 'utf8mb4',
             'collation' => 'utf8mb4_unicode_ci',

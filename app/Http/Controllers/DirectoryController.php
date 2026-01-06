@@ -76,9 +76,17 @@ class DirectoryController extends Controller
             $query->where('gender', $request->gender);
         }
 
-        // Filter by region
-        if ($request->filled('region')) {
-            $query->where('region', $request->region);
+        // Filter by country
+        if ($request->filled('country')) {
+            // For now, we'll still filter by region since we haven't migrated to country/city IDs yet
+            // This will be updated once the migration is complete
+            $query->where('region', 'like', '%' . $request->country . '%');
+        }
+
+        // Filter by city
+        if ($request->filled('city')) {
+            // For now, we'll still filter by region since we haven't migrated to country/city IDs yet
+            $query->where('region', $request->city);
         }
 
         // Filter by discipline

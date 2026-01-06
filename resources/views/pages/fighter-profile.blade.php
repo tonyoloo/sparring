@@ -132,26 +132,29 @@
                                                    value="{{ $fighter->name }}" required>
                                         </div>
                                     </div>
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label>Region</label>
-                                            <select name="region" class="form-control">
-                                                <option value="">Select Region</option>
-                                                <option value="east" {{ $fighter->region == 'east' ? 'selected' : '' }}>East</option>
-                                                <option value="south_east" {{ $fighter->region == 'south_east' ? 'selected' : '' }}>South East</option>
-                                                <option value="south_west" {{ $fighter->region == 'south_west' ? 'selected' : '' }}>South West</option>
-                                                <option value="west_midlands" {{ $fighter->region == 'west_midlands' ? 'selected' : '' }}>West Midlands</option>
-                                                <option value="london" {{ $fighter->region == 'london' ? 'selected' : '' }}>London</option>
-                                                <option value="north_east" {{ $fighter->region == 'north_east' ? 'selected' : '' }}>North East</option>
-                                                <option value="north_west" {{ $fighter->region == 'north_west' ? 'selected' : '' }}>North West</option>
-                                                <option value="yorkshire_humber" {{ $fighter->region == 'yorkshire_humber' ? 'selected' : '' }}>Yorkshire & Humber</option>
-                                                <option value="east_midlands" {{ $fighter->region == 'east_midlands' ? 'selected' : '' }}>East Midlands</option>
-                                                <option value="northern_ireland" {{ $fighter->region == 'northern_ireland' ? 'selected' : '' }}>Northern Ireland</option>
-                                                <option value="scotland" {{ $fighter->region == 'scotland' ? 'selected' : '' }}>Scotland</option>
-                                                <option value="wales" {{ $fighter->region == 'wales' ? 'selected' : '' }}>Wales</option>
-                                            </select>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label>Country</label>
+                                                <select name="country" id="country_select" class="form-control">
+                                                    <option value="">Select Country</option>
+                                                    <!-- Countries will be loaded dynamically -->
+                                                </select>
+                                            </div>
                                         </div>
                                     </div>
+
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label>City</label>
+                                                <select name="city" id="city_select" class="form-control" disabled>
+                                                    <option value="">Select Country First</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <!-- Keep region as hidden field for backward compatibility -->
+                                            <input type="hidden" name="region" id="region_hidden" value="{{ $fighter->region }}">
                                 </div>
 
                                 @if($fighter->category === 'fighters')
@@ -436,6 +439,9 @@
 @push('scripts')
 <script>
 $(document).ready(function() {
+    // Load countries on page load
+    loadCountries();
+
     // Profile image preview
     $('#profile_image').change(function() {
         const file = this.files[0];
@@ -476,11 +482,71 @@ $(document).ready(function() {
         }
     });
 
+    // Country change handler
+    $(document).on('change', '#country_select', function() {
+        var countryId = $(this).val();
+        if (countryId) {
+            loadCities(countryId);
+        } else {
+            $('#city_select').html('<option value="">Select Country First</option>').prop('disabled', true);
+            $('#region_hidden').val('');
+        }
+    });
+
+    // City change handler - update hidden region field for backward compatibility
+    $(document).on('change', '#city_select', function() {
+        var cityId = $(this).val();
+        var selectedOption = $(this).find('option:selected');
+        var region = selectedOption.data('region') || '';
+        $('#region_hidden').val(region);
+    });
+
     // Form validation
     $('form').on('submit', function(e) {
         // Add any custom validation here if needed
         return true;
     });
+
+    function loadCountries() {
+        $.ajax({
+            url: '{{ route("api.countries") }}',
+            type: 'GET',
+            success: function(response) {
+                if (response.success) {
+                    var options = '<option value="">Select Country</option>';
+                    response.data.forEach(function(country) {
+                        options += '<option value="' + country.id + '">' + country.name + '</option>';
+                    });
+                    $('#country_select').html(options);
+                }
+            },
+            error: function() {
+                console.error('Error loading countries');
+            }
+        });
+    }
+
+    function loadCities(countryId) {
+        $.ajax({
+            url: '{{ route("api.cities") }}',
+            type: 'GET',
+            data: { country_id: countryId },
+            success: function(response) {
+                if (response.success) {
+                    var options = '<option value="">Select City</option>';
+                    response.data.forEach(function(city) {
+                        var selected = '{{ $fighter->region }}' === city.region ? 'selected' : '';
+                        options += '<option value="' + city.id + '" data-region="' + city.region + '" ' + selected + '>' + city.name + '</option>';
+                    });
+                    $('#city_select').html(options).prop('disabled', false);
+                }
+            },
+            error: function() {
+                console.error('Error loading cities');
+                $('#city_select').html('<option value="">Error loading cities</option>');
+            }
+        });
+    }
 });
 </script>
 @endpush

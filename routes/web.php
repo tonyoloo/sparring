@@ -384,6 +384,27 @@ Route::get('/fighter/{id}', [
     'as' => 'fighter.show',
 ]);
 
+// Location Routes (for countries and cities)
+Route::get('/api/countries', [
+    'uses' => 'App\Http\Controllers\LocationController@getCountries',
+    'as' => 'api.countries',
+]);
+
+Route::get('/api/cities', [
+    'uses' => 'App\Http\Controllers\LocationController@getCities',
+    'as' => 'api.cities',
+]);
+
+Route::get('/api/regions', [
+    'uses' => 'App\Http\Controllers\LocationController@getRegions',
+    'as' => 'api.regions',
+]);
+
+Route::post('/api/seed-locations', [
+    'uses' => 'App\Http\Controllers\LocationController@seedLocations',
+    'as' => 'api.seed-locations',
+]);
+
 Route::group(['middleware' => 'auth'], function () {
     Route::get('{page}', ['as' => 'page.index', 'uses' => 'App\Http\Controllers\PageController@index']);
 });

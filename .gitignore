@@ -82,4 +82,5 @@ Homestead.json
 /public/error_log
 
 /storage
+/config/database.php
 #storage/*.key

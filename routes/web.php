@@ -75,10 +75,12 @@ Auth::routes(['verify' => true]);
 
 
 
-Route::group(['middleware' => 'auth'], function () {
+Route::group(['middleware' => ['auth']], function () {
     Route::resource('user', 'App\Http\Controllers\UserController', ['except' => ['show']]);
-    Route::get('profile', ['as' => 'profile.edit', 'uses' => 'App\Http\Controllers\ProfileController@edit']);
-    Route::put('profile', ['as' => 'profile.update', 'uses' => 'App\Http\Controllers\ProfileController@update']);
+    Route::get('profile', ['as' => 'profile.general', 'uses' => 'App\Http\Controllers\ProfileController@general']);
+    Route::get('test-email', function () {
+        return view('test-email');
+    });
     Route::put('profile/password', ['as' => 'profile.password', 'uses' => 'App\Http\Controllers\ProfileController@password']);
     Route::get('fighter-profile', ['as' => 'fighter.edit', 'uses' => 'App\Http\Controllers\ProfileController@editFighter']);
     Route::put('profile/fighter', ['as' => 'fighter.update', 'uses' => 'App\Http\Controllers\ProfileController@updateFighter']);

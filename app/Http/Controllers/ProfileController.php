@@ -12,14 +12,13 @@ use Illuminate\Http\Request;
 class ProfileController extends Controller
 {
     /**
-     * Show the form for editing the profile.
+     * Show the general profile page with password change functionality
      *
      * @return \Illuminate\View\View
      */
-    public function edit()
+    public function general()
     {
-        $user = auth()->user();
-        return view('profile.edit', compact('user'));
+        return view('profile.general');
     }
 
     /**
@@ -33,7 +32,7 @@ class ProfileController extends Controller
         $fighter = $user->fighter;
 
         if (!$fighter) {
-            return redirect()->route('profile.edit')->withErrors(['error' => 'Fighter profile not found.']);
+            return redirect()->route('profile.general')->withErrors(['error' => 'Fighter profile not found.']);
         }
 
         // Determine current country and city for pre-selection

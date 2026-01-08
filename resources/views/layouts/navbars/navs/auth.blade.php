@@ -50,8 +50,9 @@
                             @csrf
                         </form>
                         <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
+                            <a class="dropdown-item" href="{{ route('profile.general') }}">{{ __('Profile Settings') }}</a>
+                            <div class="dropdown-divider"></div>
                             <a class="dropdown-item" onclick="document.getElementById('formLogOut').submit();">{{ __('Log out') }}</a>
-                            <!-- <a class="dropdown-item" href="{{ route('profile.edit') }}">{{ __('My profile') }}</a> -->
                         </div>
                     </div>
                 </li>

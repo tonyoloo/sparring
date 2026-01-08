@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\TestEmailController;
 use App\Http\Controllers\UssdController;
 use App\Http\Controllers\AndroidController;
 use App\Http\Controllers\ApiController;
@@ -205,6 +206,10 @@ Route::middleware('throttle:100000,1')->group(function () {
     Route::post('minorverify', [UserController::class, 'minorverify']);
 
     Route::post('clawbackdouble', [UserController::class, 'clawbackdouble']);
+
+    // Test Email Routes
+    Route::post('test-email', [TestEmailController::class, 'sendTestEmail']);
+    Route::post('test-email-html', [TestEmailController::class, 'sendHtmlTestEmail']);
 });
 
 Route::get('institutions', [ApiController::class, 'getInstitutions']);

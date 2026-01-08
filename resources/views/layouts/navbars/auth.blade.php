@@ -19,19 +19,19 @@
                     <i class="nc-icon nc-tablet-2"></i>
                     <p>{{ __('student profile') }}</p>
                 </a>
-            </li>
-            <li class="{{ $elementActive == 'viewprofile' ? 'active' : '' }}">
+            </li>-->
+            <!-- <li class="{{ $elementActive == 'viewprofile' ? 'active' : '' }}">
                 <a href="{{ route('page.index', 'viewprofile') }}">
                     <i class="nc-icon nc-tablet-2"></i>
                     <p>{{ __('view profile') }}</p>
                 </a>
-            </li>
+            </li> -->
             <li class="{{ $elementActive == 'profile' ? 'active' : '' }}">
-                <a href="{{ route('profile.edit') }}">
+                <a href="{{ route('profile.general') }}">
                 <i class="nc-icon nc-tablet-2"></i>
                 <p>{{ __(' User Profile ') }}</p>
                 </a>
-            </li> -->
+            </li>
             <li class="{{ $elementActive == 'fighter_profile' ? 'active' : '' }}">
                 <a href="{{ route('fighter.edit') }}">
                 <i class="nc-icon nc-single-02"></i>

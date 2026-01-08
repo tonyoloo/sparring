@@ -124,6 +124,14 @@ class Fighter extends Model
     }
 
     /**
+     * Get the user associated with this fighter.
+     */
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'email', 'email');
+    }
+
+    /**
      * Get formatted location string (City, Country).
      */
     public function getLocationAttribute()

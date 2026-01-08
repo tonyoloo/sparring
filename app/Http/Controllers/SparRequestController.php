@@ -8,6 +8,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Log;
+
 
 class SparRequestController extends Controller
 {
@@ -43,17 +45,38 @@ class SparRequestController extends Controller
      */
     public function create($fighterId)
     {
+        // Debug logging
+        Log::info('SparRequestController@create called', [
+            'fighterId' => $fighterId,
+            'user_id' => auth()->id(),
+            'has_fighter' => auth()->user()->fighter ? 'yes' : 'no'
+        ]);
+
+        // Temporary debug - remove this after testing
+        // dd('SparRequestController@create reached', $fighterId, auth()->user());
+
         $user = Auth::user();
         $currentFighter = $user->fighter;
 
         if (!$currentFighter) {
+            Log::warning('User tried to create spar request without fighter profile', [
+                'user_id' => $user->id,
+                'email' => $user->email
+            ]);
             return redirect()->route('fighter.edit')->with('error', 'You need a fighter profile to send spar requests.');
         }
 
-        $targetFighter = Fighter::with(['photos', 'country', 'city'])->findOrFail($fighterId);
+        try {
+            $targetFighter = Fighter::with(['photos', 'country', 'city'])->findOrFail($fighterId);
+            Log::info('Target fighter found', ['target_fighter_id' => $targetFighter->id, 'target_fighter_name' => $targetFighter->name]);
+        } catch (\Exception $e) {
+            Log::error('Target fighter not found', ['fighterId' => $fighterId, 'error' => $e->getMessage()]);
+            return redirect()->back()->with('error', 'The fighter you are trying to contact does not exist.');
+        }
 
         // Check if user is trying to request themselves
         if ($currentFighter->id === $targetFighter->id) {
+            Log::info('User tried to send spar request to themselves', ['user_id' => $user->id, 'fighter_id' => $fighterId]);
             return redirect()->back()->with('error', 'You cannot send a spar request to yourself.');
         }
 
@@ -66,11 +89,29 @@ class SparRequestController extends Controller
                   ->where('receiver_id', $currentFighter->id);
         })->where('status', 'pending')->first();
 
+        Log::info('Checking for existing requests', [
+            'current_fighter_id' => $currentFighter->id,
+            'target_fighter_id' => $targetFighter->id,
+            'existing_request_found' => $existingRequest ? 'YES' : 'NO',
+            'existing_request_id' => $existingRequest ? $existingRequest->id : null
+        ]);
+
         if ($existingRequest) {
+            Log::info('Redirecting with existing request error');
             return redirect()->back()->with('error', 'There is already a pending spar request between you and this fighter.');
         }
 
-        return view('pages.create-spar-request', compact('targetFighter'));
+        Log::info('Spar request create view being returned', [
+            'target_fighter' => $targetFighter->name,
+            'target_fighter_id' => $targetFighter->id,
+            'view_path' => 'pages.create-spar-request',
+            'timestamp' => now()->toISOString()
+        ]);
+
+        $view = view('pages.create-spar-request', compact('targetFighter'));
+        Log::info('View rendered successfully', ['view_exists' => $view ? 'yes' : 'no']);
+
+        return $view;
     }
 
     /**
@@ -115,7 +156,7 @@ class SparRequestController extends Controller
         }
 
         // Create the spar request
-        SparRequest::create([
+        $sparRequest = SparRequest::create([
             'sender_id' => $currentFighter->id,
             'receiver_id' => $targetFighter->id,
             'message' => $request->message,
@@ -124,6 +165,11 @@ class SparRequestController extends Controller
             'notes' => $request->notes,
             'status' => 'pending',
         ]);
+
+        // Send notification to the receiver if user exists
+        if ($targetFighter->user) {
+            $targetFighter->user->notify(new \App\Notifications\SparRequestSent($sparRequest, $currentFighter));
+        }
 
         return redirect()->route('spar-requests.index')->with('success', 'Spar request sent successfully!');
     }
@@ -152,6 +198,11 @@ class SparRequestController extends Controller
             'responded_at' => now(),
         ]);
 
+        // Send notification to the sender if user exists
+        if ($sparRequest->sender->user) {
+            $sparRequest->sender->user->notify(new \App\Notifications\SparRequestAccepted($sparRequest, $fighter));
+        }
+
         return redirect()->back()->with('success', 'Spar request accepted!');
     }
 
@@ -179,6 +230,11 @@ class SparRequestController extends Controller
             'responded_at' => now(),
         ]);
 
+        // Send notification to the sender if user exists
+        if ($sparRequest->sender->user) {
+            $sparRequest->sender->user->notify(new \App\Notifications\SparRequestRejected($sparRequest, $fighter));
+        }
+
         return redirect()->back()->with('success', 'Spar request rejected.');
     }
 
@@ -205,6 +261,11 @@ class SparRequestController extends Controller
             'status' => 'cancelled',
             'responded_at' => now(),
         ]);
+
+        // Send notification to the receiver if user exists
+        if ($sparRequest->receiver->user) {
+            $sparRequest->receiver->user->notify(new \App\Notifications\SparRequestCancelled($sparRequest, $fighter));
+        }
 
         return redirect()->back()->with('success', 'Spar request cancelled.');
     }

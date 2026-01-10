@@ -3,6 +3,8 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use League\MimeTypeDetection\MimeTypeDetector;
+use App\Services\SafeMimeTypeDetector;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -11,7 +13,14 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        // Override MIME type detector binding to use our safe detector
+        // This prevents "Class finfo not found" errors on servers without fileinfo extension
+        $this->app->bind(
+            MimeTypeDetector::class,
+            function ($app) {
+                return new SafeMimeTypeDetector();
+            }
+        );
     }
 
     /**

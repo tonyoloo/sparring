@@ -90,13 +90,12 @@ class FighterPhoto extends Model
             // Delete the actual file
             if ($photo->photo_path) {
                 try {
-                    $storage = \Storage::disk('public');
                     $fullPath = storage_path('app/public/' . $photo->photo_path);
                     
-                    // Check if file exists using file_exists instead of Storage::exists
-                    // This avoids the finfo dependency issue
+                    // Use direct file deletion instead of Storage::delete() to avoid finfo dependency
+                    // This prevents "Class finfo not found" errors on servers without fileinfo extension
                     if (file_exists($fullPath)) {
-                        $storage->delete($photo->photo_path);
+                        @unlink($fullPath);
                     }
                 } catch (\Exception $e) {
                     // Log error but don't prevent deletion of the database record

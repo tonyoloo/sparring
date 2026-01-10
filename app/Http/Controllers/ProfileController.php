@@ -131,39 +131,63 @@ class ProfileController extends Controller
 
         // Handle profile image upload
         if ($request->hasFile('profile_image')) {
-            $image = $request->file('profile_image');
-            $imageName = time() . '_' . $fighter->id . '.' . $image->getClientOriginalExtension();
+            try {
+                $image = $request->file('profile_image');
+                $imageName = time() . '_' . $fighter->id . '.' . $image->getClientOriginalExtension();
 
-            // Store in public disk under fighters directory
-            $path = $image->storeAs('fighters', $imageName, 'public');
-            $validatedData['profile_image'] = '/storage/' . $path;
+                // Store in public disk under fighters directory
+                $path = $image->storeAs('fighters', $imageName, 'public');
+                $validatedData['profile_image'] = '/storage/' . $path;
+            } catch (\Error $e) {
+                // Handle "Class finfo not found" error
+                if (strpos($e->getMessage(), 'finfo') !== false) {
+                    \Log::error('fileinfo extension not available on server', [
+                        'error' => $e->getMessage(),
+                        'user_id' => auth()->id()
+                    ]);
+                    return back()->withErrors(['profile_image' => 'File upload failed. Please contact administrator - fileinfo extension required.']);
+                }
+                throw $e;
+            }
         }
 
         // Handle multiple fighter photos upload
         if ($request->hasFile('fighter_photos')) {
-            $currentPhotoCount = $fighter->photos()->count();
-            $uploadedPhotos = $request->file('fighter_photos');
-            $maxPhotos = 3 - $currentPhotoCount;
+            try {
+                $currentPhotoCount = $fighter->photos()->count();
+                $uploadedPhotos = $request->file('fighter_photos');
+                $maxPhotos = 3 - $currentPhotoCount;
 
-            // Only process if we haven't exceeded the limit
-            if (count($uploadedPhotos) <= $maxPhotos) {
-                foreach ($uploadedPhotos as $index => $photo) {
-                    $photoName = time() . '_' . $fighter->id . '_photo_' . ($currentPhotoCount + $index + 1) . '.' . $photo->getClientOriginalExtension();
+                // Only process if we haven't exceeded the limit
+                if (count($uploadedPhotos) <= $maxPhotos) {
+                    foreach ($uploadedPhotos as $index => $photo) {
+                        $photoName = time() . '_' . $fighter->id . '_photo_' . ($currentPhotoCount + $index + 1) . '.' . $photo->getClientOriginalExtension();
 
-                    // Store in public disk under fighters/photos directory
-                    $path = $photo->storeAs('fighters/photos', $photoName, 'public');
+                        // Store in public disk under fighters/photos directory
+                        $path = $photo->storeAs('fighters/photos', $photoName, 'public');
 
-                    // Create the photo record
-                    FighterPhoto::create([
-                        'fighter_id' => $fighter->id,
-                        'photo_path' => $path,
-                        'photo_name' => $photo->getClientOriginalName(),
-                        'is_primary' => ($currentPhotoCount + $index) === 0 && !$fighter->photos()->exists(), // First photo is primary if no photos exist
-                        'sort_order' => $currentPhotoCount + $index,
-                    ]);
+                        // Create the photo record
+                        FighterPhoto::create([
+                            'fighter_id' => $fighter->id,
+                            'photo_path' => $path,
+                            'photo_name' => $photo->getClientOriginalName(),
+                            'is_primary' => ($currentPhotoCount + $index) === 0 && !$fighter->photos()->exists(), // First photo is primary if no photos exist
+                            'sort_order' => $currentPhotoCount + $index,
+                        ]);
 
-                    $currentPhotoCount++;
+                        $currentPhotoCount++;
+                    }
                 }
+            } catch (\Error $e) {
+                // Handle "Class finfo not found" error
+                if (strpos($e->getMessage(), 'finfo') !== false) {
+                    \Log::error('fileinfo extension not available on server', [
+                        'error' => $e->getMessage(),
+                        'user_id' => auth()->id()
+                    ]);
+                    return back()->withErrors(['fighter_photos' => 'Photo upload failed. Please contact administrator - fileinfo extension required.']);
+                }
+                throw $e;
             }
         }
 

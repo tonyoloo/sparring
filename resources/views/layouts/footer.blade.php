@@ -9,7 +9,7 @@
                     ©
                     <script>
                         document.write(new Date().getFullYear())
-                    </script>, made with <i class="fa fa-heart heart"></i> by <a class="" target="_blank" href="https://tonyoloo.co.ke/">toloo</a>
+                    </script>, made with <i class="fa fa-heart heart"></i> by <a class="" target="_blank" href="https://www.linkedin.com/public-profile/settings?trk=d_flagship3_profile_self_view_public_profile">toloo</a>
                 </span>
             </div>
         </div>

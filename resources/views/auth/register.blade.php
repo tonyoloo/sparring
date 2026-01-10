@@ -6,7 +6,7 @@
 'pageKeywords' => 'register, join, martial arts, combat sports, fighters, sparring partners, training, boxing, MMA, karate, taekwondo',
 'ogTitle' => 'Join Ngumi Network - The Ultimate Combat Sports Platform',
 'ogDescription' => 'Create your free account on Ngumi Network and connect with fighters from around the world. Find sparring partners, trainers, and grow your combat sports career.',
-'ogImage' => asset('paper/img/og-register.jpg')
+'ogImage' => asset('paper/img/logo.png')
 ])
 
 @section('content')
@@ -926,4 +926,11 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 </script>
+@endpush
+@push('scripts')
+    <script>
+        $(document).ready(function() {
+            demo.checkFullPageBackgroundImage();
+        });
+    </script>
 @endpush

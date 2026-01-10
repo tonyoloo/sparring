@@ -38,7 +38,7 @@
     {{-- <script src="/paper/js/users.js"></script> --}}
 </head>
 
-<body class="{{ $class }}">
+<body class="{{ $class ?? '' }}">
 
     @auth()
     @include('layouts.page_templates.auth')

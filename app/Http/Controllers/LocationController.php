@@ -4,11 +4,25 @@ namespace App\Http\Controllers;
 
 use App\Models\Country;
 use App\Models\City;
+use App\Models\Discipline;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 
 class LocationController extends Controller
 {
+    /**
+     * Get all active disciplines.
+     */
+    public function getDisciplines(): JsonResponse
+    {
+        $disciplines = Discipline::active()->ordered()->get(['id', 'name', 'code', 'description']);
+
+        return response()->json([
+            'success' => true,
+            'data' => $disciplines
+        ]);
+    }
+
     /**
      * Get all active countries.
      */

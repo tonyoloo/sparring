@@ -60,7 +60,21 @@
                                                     <div class="col-md-6">
                                                         <h6 class="mb-1">{{ $request->sender->name }}</h6>
                                                         <p class="text-muted small mb-1">
-                                                            {{ ucfirst(str_replace('_', ' ', $request->sender->discipline ?? 'Unknown')) }} •
+                                                            @php
+                                                                $senderDiscipline = 'Unknown';
+                                                                if ($request->sender->relationLoaded('discipline')) {
+                                                                    $discipline = $request->sender->getRelation('discipline');
+                                                                    if ($discipline instanceof \App\Models\Discipline) {
+                                                                        $senderDiscipline = $discipline->name;
+                                                                    }
+                                                                } elseif ($request->sender->discipline_id) {
+                                                                    $discipline = $request->sender->discipline()->first();
+                                                                    if ($discipline) {
+                                                                        $senderDiscipline = $discipline->name;
+                                                                    }
+                                                                }
+                                                            @endphp
+                                                            {{ $senderDiscipline }} •
                                                             {{ ucfirst($request->sender->experience ?? 'Unknown') }}
                                                         </p>
                                                         <p class="mb-1">{{ $request->message ?? 'No message provided' }}</p>
@@ -143,7 +157,21 @@
                                                     <div class="col-md-6">
                                                         <h6 class="mb-1">{{ $request->receiver->name }}</h6>
                                                         <p class="text-muted small mb-1">
-                                                            {{ ucfirst(str_replace('_', ' ', $request->receiver->discipline ?? 'Unknown')) }} •
+                                                            @php
+                                                                $receiverDiscipline = 'Unknown';
+                                                                if ($request->receiver->relationLoaded('discipline')) {
+                                                                    $discipline = $request->receiver->getRelation('discipline');
+                                                                    if ($discipline instanceof \App\Models\Discipline) {
+                                                                        $receiverDiscipline = $discipline->name;
+                                                                    }
+                                                                } elseif ($request->receiver->discipline_id) {
+                                                                    $discipline = $request->receiver->discipline()->first();
+                                                                    if ($discipline) {
+                                                                        $receiverDiscipline = $discipline->name;
+                                                                    }
+                                                                }
+                                                            @endphp
+                                                            {{ $receiverDiscipline }} •
                                                             {{ ucfirst($request->receiver->experience ?? 'Unknown') }}
                                                         </p>
                                                         <p class="mb-1">{{ $request->message ?? 'No message provided' }}</p>

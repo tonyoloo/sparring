@@ -97,7 +97,7 @@ class ProfileController extends Controller
         switch ($fighter->category) {
             case 'fighters':
                 $rules = array_merge($rules, [
-                    'discipline' => 'required|string',
+                    'discipline' => 'required|integer|exists:disciplines,id',
                     'experience' => 'required|in:beginner,intermediate,advanced',
                     'level' => 'required|in:amateur,semi_pro,professional',
                     'height' => 'nullable|integer|min:100|max:250',
@@ -113,7 +113,7 @@ class ProfileController extends Controller
                     'primary_profession' => 'required|string',
                     'badge_level' => 'nullable|in:bronze,silver,gold',
                     'profession_count' => 'nullable|integer|min:1|max:10',
-                    'discipline' => 'nullable|string',
+                    'discipline' => 'nullable|integer|exists:disciplines,id',
                     'bio' => 'nullable|string|max:1000',
                 ]);
                 break;

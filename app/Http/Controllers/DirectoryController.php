@@ -49,7 +49,7 @@ class DirectoryController extends Controller
      */
     public function show($id)
     {
-        $fighter = Fighter::with(['photos', 'country', 'city'])->findOrFail($id);
+        $fighter = Fighter::with(['photos', 'country', 'city', 'discipline'])->findOrFail($id);
 
         return view('pages.view-fighter-profile', compact('fighter'));
     }
@@ -63,7 +63,7 @@ class DirectoryController extends Controller
      */
     private function getDirectoryResults(Request $request, $category)
     {
-        $query = Fighter::with(['photos', 'country', 'city'])->where('category', $category);
+        $query = Fighter::with(['photos', 'country', 'city', 'discipline'])->where('category', $category);
 
         // Search by name
         if ($request->filled('search')) {
@@ -88,7 +88,7 @@ class DirectoryController extends Controller
 
         // Filter by discipline
         if ($request->filled('discipline')) {
-            $query->where('discipline', $request->discipline);
+            $query->where('discipline_id', $request->discipline);
         }
 
         // Filter by stance (only for fighters)

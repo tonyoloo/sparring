@@ -104,29 +104,9 @@
                                         <div class="col-md-4">
                                             <div class="form-group">
                                                 <label>Primary Discipline *</label>
-                                                <select name="discipline" class="form-control" required>
+                                                <select name="discipline" id="discipline_select" class="form-control" required>
                                                     <option value="">Select Discipline</option>
-                                                    <option value="boxing" {{ $fighter->discipline == 'boxing' ? 'selected' : '' }}>Boxing</option>
-                                                    <option value="mma" {{ $fighter->discipline == 'mma' ? 'selected' : '' }}>MMA</option>
-                                                    <option value="taekwondo" {{ $fighter->discipline == 'taekwondo' ? 'selected' : '' }}>Taekwondo</option>
-                                                    <option value="karate" {{ $fighter->discipline == 'karate' ? 'selected' : '' }}>Karate</option>
-                                                    <option value="wrestling" {{ $fighter->discipline == 'wrestling' ? 'selected' : '' }}>Wrestling</option>
-                                                    <option value="jiu_jitsu" {{ $fighter->discipline == 'jiu_jitsu' ? 'selected' : '' }}>Jiu jitsu</option>
-                                                    <option value="kick_boxing" {{ $fighter->discipline == 'kick_boxing' ? 'selected' : '' }}>Kick Boxing</option>
-                                                    <option value="thai_boxing" {{ $fighter->discipline == 'thai_boxing' ? 'selected' : '' }}>Thai Boxing</option>
-                                                    <option value="judo" {{ $fighter->discipline == 'judo' ? 'selected' : '' }}>Judo</option>
-                                                    <option value="kung_fu" {{ $fighter->discipline == 'kung_fu' ? 'selected' : '' }}>Kung Fu</option>
-                                                    <option value="tai_chi" {{ $fighter->discipline == 'tai_chi' ? 'selected' : '' }}>Tai Chi</option>
-                                                    <option value="wing_chun" {{ $fighter->discipline == 'wing_chun' ? 'selected' : '' }}>Wing Chun</option>
-                                                    <option value="krav_maga" {{ $fighter->discipline == 'krav_maga' ? 'selected' : '' }}>Krav Maga</option>
-                                                    <option value="aikido" {{ $fighter->discipline == 'aikido' ? 'selected' : '' }}>Aikido</option>
-                                                    <option value="choi_kwang_do" {{ $fighter->discipline == 'choi_kwang_do' ? 'selected' : '' }}>Choi kwang do</option>
-                                                    <option value="capoeira" {{ $fighter->discipline == 'capoeira' ? 'selected' : '' }}>Capoeira</option>
-                                                    <option value="ninjutsu" {{ $fighter->discipline == 'ninjutsu' ? 'selected' : '' }}>Ninjutsu</option>
-                                                    <option value="kendo" {{ $fighter->discipline == 'kendo' ? 'selected' : '' }}>Kendo</option>
-                                                    <option value="kobudo" {{ $fighter->discipline == 'kobudo' ? 'selected' : '' }}>Kobudo</option>
-                                                    <option value="hapkido" {{ $fighter->discipline == 'hapkido' ? 'selected' : '' }}>Hapkido</option>
-                                                    <option value="tang_soo_do" {{ $fighter->discipline == 'tang_soo_do' ? 'selected' : '' }}>Tang soo do</option>
+                                                    <!-- Disciplines will be loaded dynamically -->
                                                 </select>
                                             </div>
                                         </div>
@@ -445,8 +425,9 @@
 @push('scripts')
 <script>
 $(document).ready(function() {
-    // Load countries on page load
+    // Load countries and disciplines on page load
     loadCountries();
+    loadDisciplines();
 
     // Profile image preview
     $('#profile_image').change(function() {
@@ -555,6 +536,27 @@ $(document).ready(function() {
             error: function() {
                 console.error('Error loading cities');
                 $('#city_select').html('<option value="">Error loading cities</option>');
+            }
+        });
+    }
+
+    function loadDisciplines() {
+        $.ajax({
+            url: '{{ route("api.disciplines") }}',
+            type: 'GET',
+            success: function(response) {
+                if (response.success) {
+                    var options = '<option value="">Select Discipline</option>';
+                    response.data.forEach(function(discipline) {
+                        var selected = '{{ $fighter->discipline_id }}' == discipline.id ? 'selected' : '';
+                        options += '<option value="' + discipline.id + '" ' + selected + '>' + discipline.name + '</option>';
+                    });
+                    $('#discipline_select').html(options);
+                }
+            },
+            error: function() {
+                console.error('Error loading disciplines');
+                $('#discipline_select').html('<option value="">Error loading disciplines</option>');
             }
         });
     }

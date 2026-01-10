@@ -26,13 +26,13 @@ class SparRequestController extends Controller
         }
 
         // Get sent requests
-        $sentRequests = SparRequest::with(['receiver'])
+        $sentRequests = SparRequest::with(['receiver.discipline'])
             ->sentBy($fighter->id)
             ->orderBy('created_at', 'desc')
             ->paginate(10, ['*'], 'sent_page');
 
         // Get received requests
-        $receivedRequests = SparRequest::with(['sender'])
+        $receivedRequests = SparRequest::with(['sender.discipline'])
             ->receivedBy($fighter->id)
             ->orderBy('created_at', 'desc')
             ->paginate(10, ['*'], 'received_page');

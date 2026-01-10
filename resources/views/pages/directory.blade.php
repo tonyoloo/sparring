@@ -304,8 +304,25 @@
 
                                                     <div class="mb-2">
                                                         <small class="text-muted">
-                                                            Discipline: {{ ucfirst(str_replace('_', ' ', $fighter->discipline ?? 'N/A')) }}
-                                                            @if($fighter->discipline_count > 1)
+                                                            Discipline: @php
+                                                                $disciplineName = 'N/A';
+                                                                // Use getRelation to explicitly get the relationship if loaded
+                                                                if ($fighter->relationLoaded('discipline')) {
+                                                                    $discipline = $fighter->getRelation('discipline');
+                                                                    if ($discipline instanceof \App\Models\Discipline) {
+                                                                        $disciplineName = $discipline->name;
+                                                                    }
+                                                                } elseif ($fighter->discipline_id) {
+                                                                    // Load discipline relationship if not already loaded
+                                                                    $discipline = $fighter->discipline()->first();
+                                                                    if ($discipline) {
+                                                                        $disciplineName = $discipline->name;
+                                                                    }
+                                                                }
+                                                                // Note: We don't use the old 'discipline' string column anymore
+                                                            @endphp
+                                                            {{ $disciplineName }}
+                                                            @if(isset($fighter->discipline_count) && $fighter->discipline_count > 1)
                                                                 +{{ $fighter->discipline_count - 1 }}
                                                             @endif
                                                         </small>

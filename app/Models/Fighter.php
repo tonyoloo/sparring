@@ -20,7 +20,7 @@ class Fighter extends Model
         'gender',
         'country_id',
         'city_id',
-        'discipline',
+        'discipline_id',
         'stance',
         'experience',
         'level',
@@ -47,6 +47,14 @@ class Fighter extends Model
     protected $casts = [
         'is_active' => 'boolean',
         'spar_amount' => 'decimal:2',
+        'country_id' => 'integer',
+        'city_id' => 'integer',
+        'discipline_id' => 'integer',
+        'height' => 'integer',
+        'weight' => 'integer',
+        'age' => 'integer',
+        'profession_count' => 'integer',
+        'contact_info' => 'array',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
     ];
@@ -129,6 +137,14 @@ class Fighter extends Model
     public function user()
     {
         return $this->belongsTo(User::class, 'email', 'email');
+    }
+
+    /**
+     * Get the discipline associated with this fighter.
+     */
+    public function discipline()
+    {
+        return $this->belongsTo(Discipline::class, 'discipline_id');
     }
 
     /**

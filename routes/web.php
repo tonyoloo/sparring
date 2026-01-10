@@ -69,6 +69,12 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 // });
 Auth::routes(['verify' => true]);
 
+// Temporary routes for testing registration without email verification
+Route::get('register-test', function () {
+    return view('auth.register-test');
+})->name('register.test.form');
+Route::post('register-test', [App\Http\Controllers\Auth\RegisterController::class, 'registerTest'])->name('register.test');
+
 // Route::get('/home', 'App\Http\Controllers\HomeController@index')->name('home');
 
 
@@ -405,6 +411,11 @@ Route::get('/api/regions', [
 Route::post('/api/seed-locations', [
     'uses' => 'App\Http\Controllers\LocationController@seedLocations',
     'as' => 'api.seed-locations',
+]);
+
+Route::get('/api/disciplines', [
+    'uses' => 'App\Http\Controllers\LocationController@getDisciplines',
+    'as' => 'api.disciplines',
 ]);
 
 Route::group(['middleware' => 'auth'], function () {

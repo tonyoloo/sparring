@@ -93,7 +93,7 @@
                         </div>
                     </div>
                     <div class="card-body ">
-                        <form class="form" method="POST" action="{{ route('register') }}">
+                        <form class="form" method="POST" action="{{ route('register') }}" id="registrationForm">
                             @csrf
 
                             <!-- Registration Type Selection -->
@@ -197,33 +197,13 @@
                                             <i class="nc-icon nc-tag-content"></i>
                                         </span>
                                     </div>
-                                    <select name="discipline" class="form-control">
+                                    <select name="fighter_discipline" id="discipline_select" class="form-control">
                                         <option value="">Select Primary Discipline</option>
-                                        <option value="boxing" {{ old('discipline') == 'boxing' ? 'selected' : '' }}>Boxing</option>
-                                        <option value="mma" {{ old('discipline') == 'mma' ? 'selected' : '' }}>MMA</option>
-                                        <option value="taekwondo" {{ old('discipline') == 'taekwondo' ? 'selected' : '' }}>Taekwondo</option>
-                                        <option value="karate" {{ old('discipline') == 'karate' ? 'selected' : '' }}>Karate</option>
-                                        <option value="wrestling" {{ old('discipline') == 'wrestling' ? 'selected' : '' }}>Wrestling</option>
-                                        <option value="jiu_jitsu" {{ old('discipline') == 'jiu_jitsu' ? 'selected' : '' }}>Jiu jitsu</option>
-                                        <option value="kick_boxing" {{ old('discipline') == 'kick_boxing' ? 'selected' : '' }}>Kick Boxing</option>
-                                        <option value="thai_boxing" {{ old('discipline') == 'thai_boxing' ? 'selected' : '' }}>Thai Boxing</option>
-                                        <option value="judo" {{ old('discipline') == 'judo' ? 'selected' : '' }}>Judo</option>
-                                        <option value="kung_fu" {{ old('discipline') == 'kung_fu' ? 'selected' : '' }}>Kung Fu</option>
-                                        <option value="tai_chi" {{ old('discipline') == 'tai_chi' ? 'selected' : '' }}>Tai Chi</option>
-                                        <option value="wing_chun" {{ old('discipline') == 'wing_chun' ? 'selected' : '' }}>Wing Chun</option>
-                                        <option value="krav_maga" {{ old('discipline') == 'krav_maga' ? 'selected' : '' }}>Krav Maga</option>
-                                        <option value="aikido" {{ old('discipline') == 'aikido' ? 'selected' : '' }}>Aikido</option>
-                                        <option value="choi_kwang_do" {{ old('discipline') == 'choi_kwang_do' ? 'selected' : '' }}>Choi kwang do</option>
-                                        <option value="capoeira" {{ old('discipline') == 'capoeira' ? 'selected' : '' }}>Capoeira</option>
-                                        <option value="ninjutsu" {{ old('discipline') == 'ninjutsu' ? 'selected' : '' }}>Ninjutsu</option>
-                                        <option value="kendo" {{ old('discipline') == 'kendo' ? 'selected' : '' }}>Kendo</option>
-                                        <option value="kobudo" {{ old('discipline') == 'kobudo' ? 'selected' : '' }}>Kobudo</option>
-                                        <option value="hapkido" {{ old('discipline') == 'hapkido' ? 'selected' : '' }}>Hapkido</option>
-                                        <option value="tang_soo_do" {{ old('discipline') == 'tang_soo_do' ? 'selected' : '' }}>Tang soo do</option>
+                                        <!-- Disciplines will be loaded dynamically -->
                                     </select>
-                                    @if ($errors->has('discipline'))
+                                    @if ($errors->has('discipline') || $errors->has('fighter_discipline'))
                                     <span class="invalid-feedback" style="display: block;" role="alert">
-                                        <strong>{{ $errors->first('discipline') }}</strong>
+                                        <strong>{{ $errors->first('discipline') ?: $errors->first('fighter_discipline') }}</strong>
                                     </span>
                                     @endif
                                 </div>
@@ -363,39 +343,39 @@
                                     @endif
                                 </div>
 
-                                <div class="input-group{{ $errors->has('discipline') ? ' has-danger' : '' }}">
+                                <div class="input-group{{ $errors->has('discipline') || $errors->has('professional_discipline') ? ' has-danger' : '' }}">
                                     <div class="input-group-prepend">
                                         <span class="input-group-text">
                                             <i class="nc-icon nc-tag-content"></i>
                                         </span>
                                     </div>
-                                    <select name="discipline" class="form-control">
+                                    <select name="professional_discipline" class="form-control">
                                         <option value="">Select Specialization Discipline</option>
-                                        <option value="boxing" {{ old('discipline') == 'boxing' ? 'selected' : '' }}>Boxing</option>
-                                        <option value="mma" {{ old('discipline') == 'mma' ? 'selected' : '' }}>MMA</option>
-                                        <option value="taekwondo" {{ old('discipline') == 'taekwondo' ? 'selected' : '' }}>Taekwondo</option>
-                                        <option value="karate" {{ old('discipline') == 'karate' ? 'selected' : '' }}>Karate</option>
-                                        <option value="wrestling" {{ old('discipline') == 'wrestling' ? 'selected' : '' }}>Wrestling</option>
-                                        <option value="jiu_jitsu" {{ old('discipline') == 'jiu_jitsu' ? 'selected' : '' }}>Jiu jitsu</option>
-                                        <option value="kick_boxing" {{ old('discipline') == 'kick_boxing' ? 'selected' : '' }}>Kick Boxing</option>
-                                        <option value="thai_boxing" {{ old('discipline') == 'thai_boxing' ? 'selected' : '' }}>Thai Boxing</option>
-                                        <option value="judo" {{ old('discipline') == 'judo' ? 'selected' : '' }}>Judo</option>
-                                        <option value="kung_fu" {{ old('discipline') == 'kung_fu' ? 'selected' : '' }}>Kung Fu</option>
-                                        <option value="tai_chi" {{ old('discipline') == 'tai_chi' ? 'selected' : '' }}>Tai Chi</option>
-                                        <option value="wing_chun" {{ old('discipline') == 'wing_chun' ? 'selected' : '' }}>Wing Chun</option>
-                                        <option value="krav_maga" {{ old('discipline') == 'krav_maga' ? 'selected' : '' }}>Krav Maga</option>
-                                        <option value="aikido" {{ old('discipline') == 'aikido' ? 'selected' : '' }}>Aikido</option>
-                                        <option value="choi_kwang_do" {{ old('discipline') == 'choi_kwang_do' ? 'selected' : '' }}>Choi kwang do</option>
-                                        <option value="capoeira" {{ old('discipline') == 'capoeira' ? 'selected' : '' }}>Capoeira</option>
-                                        <option value="ninjutsu" {{ old('discipline') == 'ninjutsu' ? 'selected' : '' }}>Ninjutsu</option>
-                                        <option value="kendo" {{ old('discipline') == 'kendo' ? 'selected' : '' }}>Kendo</option>
-                                        <option value="kobudo" {{ old('discipline') == 'kobudo' ? 'selected' : '' }}>Kobudo</option>
-                                        <option value="hapkido" {{ old('discipline') == 'hapkido' ? 'selected' : '' }}>Hapkido</option>
-                                        <option value="tang_soo_do" {{ old('discipline') == 'tang_soo_do' ? 'selected' : '' }}>Tang soo do</option>
+                                        <option value="boxing" {{ old('discipline') == 'boxing' || old('professional_discipline') == 'boxing' ? 'selected' : '' }}>Boxing</option>
+                                        <option value="mma" {{ old('discipline') == 'mma' || old('professional_discipline') == 'mma' ? 'selected' : '' }}>MMA</option>
+                                        <option value="taekwondo" {{ old('discipline') == 'taekwondo' || old('professional_discipline') == 'taekwondo' ? 'selected' : '' }}>Taekwondo</option>
+                                        <option value="karate" {{ old('discipline') == 'karate' || old('professional_discipline') == 'karate' ? 'selected' : '' }}>Karate</option>
+                                        <option value="wrestling" {{ old('discipline') == 'wrestling' || old('professional_discipline') == 'wrestling' ? 'selected' : '' }}>Wrestling</option>
+                                        <option value="jiu_jitsu" {{ old('discipline') == 'jiu_jitsu' || old('professional_discipline') == 'jiu_jitsu' ? 'selected' : '' }}>Jiu jitsu</option>
+                                        <option value="kick_boxing" {{ old('discipline') == 'kick_boxing' || old('professional_discipline') == 'kick_boxing' ? 'selected' : '' }}>Kick Boxing</option>
+                                        <option value="thai_boxing" {{ old('discipline') == 'thai_boxing' || old('professional_discipline') == 'thai_boxing' ? 'selected' : '' }}>Thai Boxing</option>
+                                        <option value="judo" {{ old('discipline') == 'judo' || old('professional_discipline') == 'judo' ? 'selected' : '' }}>Judo</option>
+                                        <option value="kung_fu" {{ old('discipline') == 'kung_fu' || old('professional_discipline') == 'kung_fu' ? 'selected' : '' }}>Kung Fu</option>
+                                        <option value="tai_chi" {{ old('discipline') == 'tai_chi' || old('professional_discipline') == 'tai_chi' ? 'selected' : '' }}>Tai Chi</option>
+                                        <option value="wing_chun" {{ old('discipline') == 'wing_chun' || old('professional_discipline') == 'wing_chun' ? 'selected' : '' }}>Wing Chun</option>
+                                        <option value="krav_maga" {{ old('discipline') == 'krav_maga' || old('professional_discipline') == 'krav_maga' ? 'selected' : '' }}>Krav Maga</option>
+                                        <option value="aikido" {{ old('discipline') == 'aikido' || old('professional_discipline') == 'aikido' ? 'selected' : '' }}>Aikido</option>
+                                        <option value="choi_kwang_do" {{ old('discipline') == 'choi_kwang_do' || old('professional_discipline') == 'choi_kwang_do' ? 'selected' : '' }}>Choi kwang do</option>
+                                        <option value="capoeira" {{ old('discipline') == 'capoeira' || old('professional_discipline') == 'capoeira' ? 'selected' : '' }}>Capoeira</option>
+                                        <option value="ninjutsu" {{ old('discipline') == 'ninjutsu' || old('professional_discipline') == 'ninjutsu' ? 'selected' : '' }}>Ninjutsu</option>
+                                        <option value="kendo" {{ old('discipline') == 'kendo' || old('professional_discipline') == 'kendo' ? 'selected' : '' }}>Kendo</option>
+                                        <option value="kobudo" {{ old('discipline') == 'kobudo' || old('professional_discipline') == 'kobudo' ? 'selected' : '' }}>Kobudo</option>
+                                        <option value="hapkido" {{ old('discipline') == 'hapkido' || old('professional_discipline') == 'hapkido' ? 'selected' : '' }}>Hapkido</option>
+                                        <option value="tang_soo_do" {{ old('discipline') == 'tang_soo_do' || old('professional_discipline') == 'tang_soo_do' ? 'selected' : '' }}>Tang soo do</option>
                                     </select>
-                                    @if ($errors->has('discipline'))
+                                    @if ($errors->has('discipline') || $errors->has('professional_discipline'))
                                     <span class="invalid-feedback" style="display: block;" role="alert">
-                                        <strong>{{ $errors->first('discipline') }}</strong>
+                                        <strong>{{ $errors->first('discipline') ?: $errors->first('professional_discipline') }}</strong>
                                     </span>
                                     @endif
                                 </div>
@@ -529,19 +509,19 @@
                                     </div>
                                     <div class="col-md-6">
                                         <div class="input-group{{ $errors->has('city_id') ? ' has-danger' : '' }}">
-                                            <div class="input-group-prepend">
-                                                <span class="input-group-text">
-                                                    <i class="nc-icon nc-pin-3"></i>
-                                                </span>
-                                            </div>
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">
+                                            <i class="nc-icon nc-pin-3"></i>
+                                        </span>
+                                    </div>
                                             <select name="city_id" id="registration_city_select" class="form-control" disabled>
                                                 <option value="">Select Country First</option>
-                                            </select>
+                                    </select>
                                             @if ($errors->has('city_id'))
-                                            <span class="invalid-feedback" style="display: block;" role="alert">
+                                    <span class="invalid-feedback" style="display: block;" role="alert">
                                                 <strong>{{ $errors->first('city_id') }}</strong>
-                                            </span>
-                                            @endif
+                                    </span>
+                                    @endif
                                         </div>
                                     </div>
                                 </div>
@@ -573,89 +553,371 @@
 
 @push('scripts')
 <script>
-    $(document).ready(function() {
-        demo.checkFullPageBackgroundImage();
+document.addEventListener('DOMContentLoaded', function() {
+    const registrationType = document.getElementById('registration_type');
+    const fighterFields = document.getElementById('fighter_fields');
+    const professionalFields = document.getElementById('professional_fields');
+    const gymFields = document.getElementById('gym_fields');
+    const commonFields = document.getElementById('common_fields');
+    const disciplineSelect = document.getElementById('discipline_select');
 
-        // Handle registration type change
-        $('#registration_type').change(function() {
-            var selectedType = $(this).val();
+    // Check if required elements exist
+    if (!registrationType) {
+        console.error('Registration type element not found');
+        return;
+    }
 
-            // Hide all conditional fields
-            $('#fighter_fields').hide();
-            $('#professional_fields').hide();
-            $('#gym_fields').hide();
-            $('#common_fields').hide();
-
-            // Show relevant fields based on selection
-            if (selectedType === 'fighter') {
-                $('#fighter_fields').show();
-                $('#common_fields').show();
-                loadRegistrationCountries();
-            } else if (selectedType === 'professional') {
-                $('#professional_fields').show();
-                $('#common_fields').show();
-                loadRegistrationCountries();
-            } else if (selectedType === 'gym') {
-                $('#gym_fields').show();
-                $('#common_fields').show();
-                loadRegistrationCountries();
-            }
-        });
-
-        // Country change handler for registration
-        $(document).on('change', '#registration_country_select', function() {
-            var countryId = $(this).val();
-            if (countryId) {
-                loadRegistrationCities(countryId);
-            } else {
-                $('#registration_city_select').html('<option value="">Select Country First</option>').prop('disabled', true);
-            }
-        });
-
-        // Trigger change on page load if a value is already selected (for validation errors)
-        if ($('#registration_type').val()) {
-            $('#registration_type').trigger('change');
-        }
+    // Log which elements are found
+    console.log('Elements found:', {
+        registrationType: !!registrationType,
+        fighterFields: !!fighterFields,
+        professionalFields: !!professionalFields,
+        gymFields: !!gymFields,
+        commonFields: !!commonFields,
+        disciplineSelect: !!disciplineSelect
     });
 
-    function loadRegistrationCountries() {
-        $.ajax({
-            url: '{{ route("api.countries") }}',
-            type: 'GET',
-            success: function(response) {
-                if (response.success) {
-                    var options = '<option value="">Select Country</option>';
-                    response.data.forEach(function(country) {
-                        options += '<option value="' + country.id + '">' + country.name + '</option>';
-                    });
-                    $('#registration_country_select').html(options);
-                }
-            },
-            error: function() {
-                console.error('Error loading countries');
-            }
+    console.log('Registration form JavaScript loaded');
+
+    // Show/hide fields based on registration type
+    function toggleFields() {
+        const type = registrationType ? registrationType.value : '';
+        console.log('toggleFields called with type:', type);
+
+        // Hide all specific fields first
+        if (fighterFields) {
+            fighterFields.style.display = 'none';
+            console.log('Hiding fighter fields');
+        }
+        if (professionalFields) {
+            professionalFields.style.display = 'none';
+            console.log('Hiding professional fields');
+        }
+        if (gymFields) {
+            gymFields.style.display = 'none';
+            console.log('Hiding gym fields');
+        }
+        if (commonFields) {
+            commonFields.style.display = 'none';
+            console.log('Hiding common fields');
+        }
+
+        // Remove required attribute from all conditional fields
+        document.querySelectorAll('#fighter_fields select, #fighter_fields input').forEach(el => {
+            el.removeAttribute('required');
         });
+        document.querySelectorAll('#professional_fields select, #professional_fields input').forEach(el => {
+            el.removeAttribute('required');
+        });
+        document.querySelectorAll('#gym_fields select, #gym_fields input').forEach(el => {
+            el.removeAttribute('required');
+        });
+
+        // Clear discipline dropdown when not fighter and reset name
+        if (disciplineSelect) {
+            disciplineSelect.innerHTML = '<option value="">Select Primary Discipline</option>';
+            disciplineSelect.removeAttribute('required');
+            disciplineSelect.removeAttribute('name');
+        }
+
+        // Show relevant fields based on type
+        if (type === 'fighter') {
+            console.log('Showing fighter fields');
+            if (fighterFields) {
+                fighterFields.style.display = 'block';
+                console.log('Fighter fields displayed');
+            }
+            if (commonFields) {
+                commonFields.style.display = 'block';
+                console.log('Common fields displayed');
+            }
+            loadDisciplines();
+
+            // Make fighter-specific fields required
+            if (disciplineSelect) {
+                disciplineSelect.setAttribute('required', 'required');
+                disciplineSelect.setAttribute('name', 'fighter_discipline');
+            }
+            const experienceField = document.querySelector('[name="experience"]');
+            if (experienceField) experienceField.setAttribute('required', 'required');
+            const levelField = document.querySelector('[name="level"]');
+            if (levelField) levelField.setAttribute('required', 'required');
+        } else if (type === 'professional') {
+            console.log('Showing professional fields');
+            if (professionalFields) {
+                professionalFields.style.display = 'block';
+                console.log('Professional fields displayed');
+            }
+            if (commonFields) {
+                commonFields.style.display = 'block';
+                console.log('Common fields displayed');
+            }
+
+            // Make professional-specific fields required
+            const professionField = document.querySelector('[name="primary_profession"]');
+            if (professionField) professionField.setAttribute('required', 'required');
+        } else if (type === 'gym') {
+            console.log('Showing gym fields');
+            if (gymFields) {
+                gymFields.style.display = 'block';
+                console.log('Gym fields displayed');
+            }
+            if (commonFields) {
+                commonFields.style.display = 'block';
+                console.log('Common fields displayed');
+            }
+
+            // Make gym-specific fields required
+            const gymTypeField = document.querySelector('[name="gym_type"]');
+            if (gymTypeField) gymTypeField.setAttribute('required', 'required');
+        } else {
+            console.log('No type selected, all fields hidden');
+        }
+    }
+
+    // Load disciplines dynamically from API
+    function loadDisciplines() {
+        if (!disciplineSelect) return;
+        fetch('{{ route("api.disciplines") }}')
+            .then(response => response.json())
+            .then(data => {
+                if (data.success && data.data) {
+                    disciplineSelect.innerHTML = '<option value="">Select Primary Discipline</option>';
+                    data.data.forEach(discipline => {
+                        const option = document.createElement('option');
+                        option.value = discipline.id;
+                        option.textContent = discipline.name;
+
+                        // Check if this was the old value
+                        if ('{{ old("discipline") }}' === discipline.id.toString()) {
+                            option.selected = true;
+                        }
+
+                        disciplineSelect.appendChild(option);
+                    });
+                }
+            })
+            .catch(error => {
+                console.error('Error loading disciplines:', error);
+                disciplineSelect.innerHTML = '<option value="">Error loading disciplines</option>';
+            });
+    }
+
+    function loadRegistrationCountries() {
+        const countrySelect = document.getElementById('registration_country_select');
+        if (!countrySelect) {
+            console.error('Country select element not found');
+            return;
+        }
+        
+        console.log('Loading countries...');
+        fetch('{{ route("api.countries") }}')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log('Countries API response:', data);
+                if (data.success && data.data) {
+                    const oldCountryId = '{{ old("country_id") }}';
+                    countrySelect.innerHTML = '<option value="">Select Country</option>';
+                    data.data.forEach(country => {
+                        const option = document.createElement('option');
+                        option.value = country.id;
+                        option.textContent = country.name;
+                        if (oldCountryId && oldCountryId == country.id) {
+                            option.selected = true;
+                        }
+                        countrySelect.appendChild(option);
+                    });
+                    console.log('Countries loaded successfully, count:', data.data.length);
+                    
+                    // Attach country change handler after countries are loaded
+                    attachCountryChangeHandler();
+                    
+                    // If there's an old country value, load its cities
+                    if (oldCountryId) {
+                        loadRegistrationCities(oldCountryId);
+                    }
+                } else {
+                    console.warn('No countries data in response:', data);
+                }
+            })
+            .catch(error => {
+                console.error('Error loading countries:', error);
+            });
     }
 
     function loadRegistrationCities(countryId) {
-        $.ajax({
-            url: '{{ route("api.cities") }}',
-            type: 'GET',
-            data: { country_id: countryId },
-            success: function(response) {
-                if (response.success) {
-                    var options = '<option value="">Select City</option>';
-                    response.data.forEach(function(city) {
-                        options += '<option value="' + city.id + '">' + city.name + '</option>';
-                    });
-                    $('#registration_city_select').html(options).prop('disabled', false);
+        const citySelect = document.getElementById('registration_city_select');
+        if (!citySelect) {
+            console.error('City select element not found');
+            return;
+        }
+        
+        if (!countryId) {
+            citySelect.innerHTML = '<option value="">Select Country First</option>';
+            citySelect.disabled = true;
+            return;
+        }
+
+        console.log('Loading cities for country ID:', countryId);
+        citySelect.disabled = true;
+        citySelect.innerHTML = '<option value="">Loading cities...</option>';
+
+        fetch('{{ route("api.cities") }}?country_id=' + countryId)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
                 }
-            },
-            error: function() {
-                console.error('Error loading cities');
-                $('#registration_city_select').html('<option value="">Error loading cities</option>');
+                return response.json();
+            })
+            .then(data => {
+                console.log('Cities API response:', data);
+                if (data.success && data.data) {
+                    const oldCityId = '{{ old("city_id") }}';
+                    citySelect.innerHTML = '<option value="">Select City</option>';
+                    data.data.forEach(city => {
+                        const option = document.createElement('option');
+                        option.value = city.id;
+                        option.textContent = city.name;
+                        if (oldCityId && oldCityId == city.id) {
+                            option.selected = true;
+                        }
+                        citySelect.appendChild(option);
+                    });
+                    citySelect.disabled = false;
+                    console.log('Cities loaded successfully, count:', data.data.length);
+                } else {
+                    citySelect.innerHTML = '<option value="">No cities found</option>';
+                    citySelect.disabled = false;
+                    console.warn('No cities data in response:', data);
+                }
+            })
+            .catch(error => {
+                console.error('Error loading cities:', error);
+                citySelect.innerHTML = '<option value="">Error loading cities</option>';
+                citySelect.disabled = false;
+            });
+    }
+
+    // Handle registration type change
+    registrationType.addEventListener('change', function() {
+        toggleFields();
+        // Load countries when type changes
+        loadRegistrationCountries();
+    });
+
+    // Country change handler for registration
+    function attachCountryChangeHandler() {
+        const countrySelect = document.getElementById('registration_country_select');
+        if (countrySelect && !countrySelect.hasAttribute('data-listener-attached')) {
+            countrySelect.addEventListener('change', function() {
+                const countryId = this.value;
+                console.log('Country changed to ID:', countryId);
+                if (countryId) {
+                    loadRegistrationCities(countryId);
+                } else {
+                    const citySelect = document.getElementById('registration_city_select');
+                    if (citySelect) {
+                        citySelect.innerHTML = '<option value="">Select Country First</option>';
+                        citySelect.disabled = true;
+                    }
+                }
+            });
+            countrySelect.setAttribute('data-listener-attached', 'true');
+            console.log('Country change handler attached');
+        }
+    }
+
+    // Also use event delegation as backup
+    document.addEventListener('change', function(e) {
+        if (e.target && e.target.id === 'registration_country_select') {
+            const countryId = e.target.value;
+            console.log('Country changed (delegated) to ID:', countryId);
+            if (countryId) {
+                loadRegistrationCities(countryId);
+            } else {
+                const citySelect = document.getElementById('registration_city_select');
+                if (citySelect) {
+                    citySelect.innerHTML = '<option value="">Select Country First</option>';
+                    citySelect.disabled = true;
+                }
+            }
+        }
+    });
+
+    // Initialize city select
+    const citySelect = document.getElementById('registration_city_select');
+    if (citySelect) {
+        citySelect.innerHTML = '<option value="">Select Country First</option>';
+        citySelect.disabled = true;
+    }
+
+    // If there's an old value (form validation failed), trigger the display
+    if (registrationType.value) {
+        toggleFields();
+        loadRegistrationCountries();
+    }
+
+
+    // Form submission validation
+    const registrationForm = document.getElementById('registrationForm');
+    if (registrationForm) {
+        registrationForm.addEventListener('submit', function(e) {
+            const type = registrationType.value;
+
+            if (type === 'fighter') {
+                const disciplineVal = disciplineSelect ? disciplineSelect.value : '';
+                const experienceField = document.querySelector('[name="experience"]');
+                const experienceVal = experienceField ? experienceField.value : '';
+                const levelField = document.querySelector('[name="level"]');
+                const levelVal = levelField ? levelField.value : '';
+
+                if (!disciplineVal) {
+                    e.preventDefault();
+                    alert('Validation Error: Please select a discipline for fighters.');
+                    if (disciplineSelect) disciplineSelect.focus();
+                    return false;
+                }
+                
+                // Ensure the discipline field has the correct name
+                if (disciplineSelect && disciplineSelect.name !== 'fighter_discipline') {
+                    disciplineSelect.setAttribute('name', 'fighter_discipline');
+                }
+                if (!experienceVal) {
+                    e.preventDefault();
+                    alert('Validation Error: Please select your experience level.');
+                    if (experienceField) experienceField.focus();
+                    return false;
+                }
+                if (!levelVal) {
+                    e.preventDefault();
+                    alert('Validation Error: Please select your competition level.');
+                    if (levelField) levelField.focus();
+                    return false;
+                }
+            } else if (type === 'professional') {
+                const professionField = document.querySelector('[name="primary_profession"]');
+                if (!professionField || !professionField.value) {
+                    e.preventDefault();
+                    alert('Validation Error: Please select your primary profession.');
+                    if (professionField) professionField.focus();
+                    return false;
+                }
+            } else if (type === 'gym') {
+                const gymTypeField = document.querySelector('[name="gym_type"]');
+                if (!gymTypeField || !gymTypeField.value) {
+                    e.preventDefault();
+                    alert('Validation Error: Please select the gym type.');
+                    if (gymTypeField) gymTypeField.focus();
+                    return false;
+                }
             }
         });
     }
+});
 </script>
 @endpush

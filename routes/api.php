@@ -207,6 +207,8 @@ Route::middleware('throttle:100000,1')->group(function () {
 
     Route::post('clawbackdouble', [UserController::class, 'clawbackdouble']);
 
+    // Location Routes (countries and cities are in web.php for consistency)
+
     // Test Email Routes
     Route::post('test-email', [TestEmailController::class, 'sendTestEmail']);
     Route::post('test-email-html', [TestEmailController::class, 'sendHtmlTestEmail']);

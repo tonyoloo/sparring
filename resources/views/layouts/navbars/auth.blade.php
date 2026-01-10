@@ -14,38 +14,38 @@
 
         <ul class="nav">
 
-            <!-- <li class="{{ $elementActive == 'studentprofile' ? 'active' : '' }}">
+            <!-- <li class="{{ ($elementActive ?? '') == 'studentprofile' ? 'active' : '' }}">
                 <a href="{{ route('page.index', 'studentprofile') }}">
                     <i class="nc-icon nc-tablet-2"></i>
                     <p>{{ __('student profile') }}</p>
                 </a>
             </li>-->
-            <!-- <li class="{{ $elementActive == 'viewprofile' ? 'active' : '' }}">
+            <!-- <li class="{{ ($elementActive ?? '') == 'viewprofile' ? 'active' : '' }}">
                 <a href="{{ route('page.index', 'viewprofile') }}">
                     <i class="nc-icon nc-tablet-2"></i>
                     <p>{{ __('view profile') }}</p>
                 </a>
             </li> -->
-            <li class="{{ $elementActive == 'profile' ? 'active' : '' }}">
+            <li class="{{ ($elementActive ?? '') == 'profile' ? 'active' : '' }}">
                 <a href="{{ route('profile.general') }}">
                 <i class="nc-icon nc-tablet-2"></i>
                 <p>{{ __(' User Profile ') }}</p>
                 </a>
             </li>
-            <li class="{{ $elementActive == 'fighter_profile' ? 'active' : '' }}">
+            <li class="{{ ($elementActive ?? '') == 'fighter_profile' ? 'active' : '' }}">
                 <a href="{{ route('fighter.edit') }}">
                 <i class="nc-icon nc-single-02"></i>
                 <p>{{ __('My Profile') }}</p>
                 </a>
             </li>
-            <li class="{{ $elementActive == 'spar_requests' ? 'active' : '' }}">
+            <li class="{{ ($elementActive ?? '') == 'spar_requests' ? 'active' : '' }}">
                 <a href="{{ route('spar-requests.index') }}">
                 <i class="nc-icon nc-favourite-28"></i>
                 <p>{{ __('Spar Requests') }}</p>
                 </a>
             </li>
             <!-- Directory Links -->
-            <li class="{{ $elementActive == 'directory' ? 'active' : '' }}">
+            <li class="{{ ($elementActive ?? '') == 'directory' ? 'active' : '' }}">
                 <a href="{{ route('directory') }}">
                     <i class="nc-icon nc-user-run"></i>
                     <p>{{ __('Directory') }}</p>

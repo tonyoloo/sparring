@@ -61,7 +61,21 @@
                                 <h5 class="mb-1">{{ $fighter->name }}</h5>
 
                                 @if($fighter->category === 'fighters')
-                                    <p class="text-muted mb-2">{{ ucfirst(str_replace('_', ' ', $fighter->discipline ?? 'Unknown')) }} Fighter</p>
+                                    @php
+                                        $disciplineName = 'Unknown';
+                                        if ($fighter->relationLoaded('discipline')) {
+                                            $discipline = $fighter->getRelation('discipline');
+                                            if ($discipline instanceof \App\Models\Discipline) {
+                                                $disciplineName = $discipline->name;
+                                            }
+                                        } elseif ($fighter->discipline_id) {
+                                            $discipline = $fighter->discipline()->first();
+                                            if ($discipline) {
+                                                $disciplineName = $discipline->name;
+                                            }
+                                        }
+                                    @endphp
+                                    <p class="text-muted mb-2">{{ $disciplineName }} Fighter</p>
                                     <span class="badge badge-{{ $fighter->level === 'professional' ? 'warning' : ($fighter->level === 'semi_pro' ? 'info' : 'secondary') }}">
                                         {{ ucfirst(str_replace('_', ' ', $fighter->level ?? 'Unknown')) }}
                                     </span>
@@ -146,9 +160,20 @@
                                         </div>
                                     </div>
 
-                                    @if($fighter->discipline)
+                                    @php
+                                        $discipline = null;
+                                        if ($fighter->relationLoaded('discipline')) {
+                                            $discipline = $fighter->getRelation('discipline');
+                                            if (!($discipline instanceof \App\Models\Discipline)) {
+                                                $discipline = null;
+                                            }
+                                        } elseif ($fighter->discipline_id) {
+                                            $discipline = $fighter->discipline()->first();
+                                        }
+                                    @endphp
+                                    @if($discipline)
                                         <div class="mb-3">
-                                            <strong>Sport Focus:</strong> {{ ucfirst(str_replace('_', ' ', $fighter->discipline)) }}
+                                            <strong>Sport Focus:</strong> {{ $discipline->name }}
                                         </div>
                                     @endif
                                 @endif
@@ -187,7 +212,10 @@
                                     @endif
 
                                     @if($fighter->email)
-                                        <a href="mailto:{{ $fighter->email }}" class="btn btn-outline-primary btn-lg">
+                                        <a href="mailto:{{ $fighter->email }}" 
+                                           class="btn btn-outline-primary btn-lg" 
+                                           title="Contact Fighter"
+                                           onclick="window.location.href='mailto:{{ $fighter->email }}'; return false;">
                                             <i class="fa fa-envelope"></i> Contact
                                         </a>
                                     @endif

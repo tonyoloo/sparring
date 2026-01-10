@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Facades\Log;
 
 class FighterPhoto extends Model
 {
@@ -87,8 +88,23 @@ class FighterPhoto extends Model
     {
         static::deleting(function ($photo) {
             // Delete the actual file
-            if ($photo->photo_path && \Storage::disk('public')->exists($photo->photo_path)) {
-                \Storage::disk('public')->delete($photo->photo_path);
+            if ($photo->photo_path) {
+                try {
+                    $storage = \Storage::disk('public');
+                    $fullPath = storage_path('app/public/' . $photo->photo_path);
+                    
+                    // Check if file exists using file_exists instead of Storage::exists
+                    // This avoids the finfo dependency issue
+                    if (file_exists($fullPath)) {
+                        $storage->delete($photo->photo_path);
+                    }
+                } catch (\Exception $e) {
+                    // Log error but don't prevent deletion of the database record
+                    Log::warning('Failed to delete photo file: ' . $e->getMessage(), [
+                        'photo_id' => $photo->id,
+                        'photo_path' => $photo->photo_path
+                    ]);
+                }
             }
         });
     }

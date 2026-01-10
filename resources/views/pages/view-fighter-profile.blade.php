@@ -211,11 +211,13 @@
                                         </a>
                                     @endif
 
-                                    @if($fighter->email)
+                                    {{-- Contact button - hidden for now, will be restored later --}}
+                                    @if(false && $fighter->email)
                                         <a href="mailto:{{ $fighter->email }}" 
                                            class="btn btn-outline-primary btn-lg" 
                                            title="Contact Fighter"
-                                           onclick="window.location.href='mailto:{{ $fighter->email }}'; return false;">
+                                           onclick="window.location.href='mailto:{{ $fighter->email }}'; return false;"
+                                           style="display: none !important; visibility: hidden !important; opacity: 0 !important; position: absolute !important; left: -9999px !important;">
                                             <i class="fa fa-envelope"></i> Contact
                                         </a>
                                     @endif

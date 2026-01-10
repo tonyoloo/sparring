@@ -17,7 +17,7 @@
                 <div class="apprentice-spaces-content" style="max-width: 980px; width: 100%; max-height: 70vh; overflow-y: auto; padding: 20px 10px; background: transparent; color: #fff; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
                     <h2>Welcome to Ngumi Network</h2>
                     <h4>Bridging the Gap Between Fighters</h4>
-                    <p>Serious fighters know that progress comes from regular sparring with a variety of partners. Yet, finding new and suitable sparring partners outside your own gym has always been a challenge. Ngumi Network bridges this gap by creating a central space where fighters can connect, communicate, and arrange sparring sessions efficiently. No more relying on chance encounters or outdated contacts—your next sparring partner is just a search away.</p>
+                    <p>Serious fighters know that progress comes from regular sparring with a variety of partners. Yet, finding new and suitable sparring partners outside your own gym has always been a challenge. Ngumi Network bridges this gap by creating a central space where fighters can connect, communicate, and arrange sparring sessions efficiently. No more relying on chance encounters or outdated contacts your next sparring partner is just a search away.</p>
                     <hr />
                     <h5>Who We Are</h5>
                     <p>Ngumi Network is a community-driven platform created by people who understand combat sports. We recognize the challenges faced by amateur and professional fighters, trainers, women fighters, and young athletes. Our goal is to support growth, safety, and opportunity across all levels of combat sports.</p> 
@@ -48,7 +48,7 @@
                     <h5>Our Vision</h5>
                     <p>To become the leading combat sports network that connects fighters, trainers, and support professionals worldwide, creating equal access to opportunities and elevating performance across all disciplines.</p> <hr />
                     <h5>Our Mission</h5>
-                    <p>To empower fighters and trainers by removing barriers to connection, improving access to quality sparring and support services, and helping combat athletes reach their full potential—both inside and outside the gym.</p><hr />
+                    <p>To empower fighters and trainers by removing barriers to connection, improving access to quality sparring and support services, and helping combat athletes reach their full potential both inside and outside the gym.</p><hr />
                     <h5>Why Choose Ngumi Network?</h5>
                     <ul>
     <li data-start="2187" data-end="2227">
@@ -69,14 +69,14 @@
 </ul>
                     <hr />
                     <h5>Join the Movement</h5>
-                    <p>Whether you’re a student seeking experience, a company ready to host interns, or an institution looking for a reliable placement partner — Ngumi Network is here for you.</p>
+                    <p>Whether you’re a student seeking experience, a company ready to host interns, or an institution looking for a reliable placement partner   Ngumi Network is here for you.</p>
                     <ul>
-                        <li>🌐 Visit us: <a href="https://www.apprenticespaces.co.ke" target="_blank">www.apprenticespaces.co.ke</a></li>
-                        <li>📧 Email: info@apprenticespaces.co.ke</li>
-                        <li>📞 Call: +254 XXX XXX XXX</li>
+                        <li>🌐 Visit us: <a href="https://www.nguminetwork.co.ke" target="_blank">www.nguminetwork.co.ke</a></li>
+                        <li>📧 Email: info@nguminetwork.co.ke</li>
+                        <li>📞 Call: +254727045828</li>
                         <li>🔗 Follow us: [LinkedIn] [Instagram] [Facebook] [Twitter]</li>
                     </ul>
-                    <p>Let’s prepare the next generation of professionals — together.</p>
+                    <p>Let’s prepare the next generation of professionals   together.</p>
                     <hr />
                     
                     <ul>

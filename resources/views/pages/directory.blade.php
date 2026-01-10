@@ -1,6 +1,18 @@
+@php
+    $seoTitle = $pageTitle ?? 'Fighters Directory';
+    $seoDescription = "Browse our directory of {$category} in combat sports. Find sparring partners, trainers, and connect with the combat sports community.";
+    $seoKeywords = $category === 'fighters' ? 'fighters, martial artists, boxers, mma fighters, karate, taekwondo, wrestlers' : ($category === 'professionals' ? 'trainers, coaches, instructors, combat sports professionals' : 'gyms, dojos, training centers, martial arts schools');
+@endphp
+
 @extends('layouts.app', [
     'class' => '',
-    'elementActive' => 'directory'
+    'elementActive' => 'directory',
+    'pageTitle' => $seoTitle . ' - Ngumi Network',
+    'pageDescription' => $seoDescription,
+    'pageKeywords' => $seoKeywords,
+    'ogTitle' => $seoTitle . ' Directory - Ngumi Network',
+    'ogDescription' => $seoDescription,
+    'ogImage' => asset('paper/img/directory-' . $category . '.jpg')
 ])
 
 @section('content')

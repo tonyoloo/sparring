@@ -418,6 +418,10 @@ Route::get('/api/disciplines', [
     'as' => 'api.disciplines',
 ]);
 
+// SEO Routes
+Route::get('/sitemap.xml', 'App\Http\Controllers\SeoController@sitemap');
+Route::get('/robots.txt', 'App\Http\Controllers\SeoController@robots');
+
 Route::group(['middleware' => 'auth'], function () {
     Route::get('{page}', ['as' => 'page.index', 'uses' => 'App\Http\Controllers\PageController@index']);
 });

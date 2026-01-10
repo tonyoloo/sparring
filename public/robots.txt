@@ -1,2 +1,15 @@
 User-agent: *
-Disallow:
+Allow: /
+
+# Block admin areas
+Disallow: /admin/
+Disallow: /api/
+
+# Allow important directories
+Allow: /directory
+Allow: /fighters
+Allow: /professionals
+Allow: /gyms
+
+# Sitemap
+Sitemap: {{ url('sitemap.xml') }}

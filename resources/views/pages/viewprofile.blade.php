@@ -42,5 +42,11 @@
 </div>
 </div>
 @endsection
-
+@push('scripts')
+    <script>
+        $(document).ready(function() {
+            demo.checkFullPageBackgroundImage();
+        });
+    </script>
+@endpush
 

@@ -219,3 +219,4 @@ Route::get('courses', [ApiController::class, 'getCourses']);
 Route::get('counties', [ApiController::class, 'getCounties']);
 Route::get('towns', [ApiController::class, 'getTowns']);
 Route::get('towns-by-county', [ApiController::class, 'getTownsByCounty']);
+

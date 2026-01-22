@@ -15,12 +15,21 @@ class LocationController extends Controller
      */
     public function getDisciplines(): JsonResponse
     {
-        $disciplines = Discipline::active()->ordered()->get(['id', 'name', 'code', 'description']);
+        try {
+            $disciplines = Discipline::active()->ordered()->get(['id', 'name', 'code']);
 
-        return response()->json([
-            'success' => true,
-            'data' => $disciplines
-        ]);
+            return response()->json([
+                'success' => true,
+                'data' => $disciplines
+            ]);
+        } catch (\Exception $e) {
+            \Log::error('Error fetching disciplines: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'Error fetching disciplines',
+                'error' => $e->getMessage()
+            ], 500);
+        }
     }
 
     /**

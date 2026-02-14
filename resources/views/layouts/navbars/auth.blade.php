@@ -1,11 +1,11 @@
 <div class="sidebar" data-color="dark" data-active-color="danger">
     <div class="logo">
-        <a href="https://mobileapp.helb.co.ke" class="simple-text logo-mini">
+        <a href="https://nguminetwork.co.ke" class="simple-text logo-mini">
             <div class="logo-image-small">
                 <img src="{{ asset('paper') }}/img/logo.png">
             </div>
         </a>
-        <a href="https://mobileapp.helb.co.ke" class="simple-text logo-normal">
+        <a href="https://nguminetwork.co.ke" class="simple-text logo-normal">
             {{ __('NGUMI NETWORK') }}
         </a>
     </div>

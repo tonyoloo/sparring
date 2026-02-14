@@ -83,14 +83,21 @@ class ProfileController extends Controller
             return back()->withErrors(['error' => 'Fighter profile not found.']);
         }
 
-        // Base validation rules
+        $hasFileinfo = extension_loaded('fileinfo');
+        $allowedImageExtensions = ['jpg', 'jpeg', 'png', 'gif'];
+
+        // Base validation rules (avoid 'image'/'mimes' when fileinfo extension is missing)
         $rules = [
             'name' => 'required|string|max:255',
             'country_id' => 'nullable|exists:countries,id',
             'city_id' => 'nullable|exists:cities,id',
-            'profile_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // 2MB max
+            'profile_image' => $hasFileinfo
+                ? 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
+                : 'nullable|file|max:2048',
             'fighter_photos' => 'nullable|array|max:3',
-            'fighter_photos.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
+            'fighter_photos.*' => $hasFileinfo
+                ? 'image|mimes:jpeg,png,jpg,gif|max:2048'
+                : 'file|max:2048',
         ];
 
         // Add type-specific validation
@@ -129,25 +136,43 @@ class ProfileController extends Controller
 
         $validatedData = $request->validate($rules);
 
+        // When fileinfo is missing, validate image extensions manually
+        if (!$hasFileinfo && $request->hasFile('profile_image')) {
+            $ext = strtolower($request->file('profile_image')->getClientOriginalExtension());
+            if (!in_array($ext, $allowedImageExtensions)) {
+                return back()->withErrors(['profile_image' => 'Invalid file type. Allowed: JPG, PNG, GIF.']);
+            }
+        }
+        if (!$hasFileinfo) {
+            $photos = $request->file('fighter_photos');
+            if (is_array($photos)) {
+                foreach ($photos as $i => $file) {
+                    if ($file && $file->isValid()) {
+                        $ext = strtolower($file->getClientOriginalExtension());
+                        if (!in_array($ext, $allowedImageExtensions)) {
+                            return back()->withErrors(['fighter_photos' => 'Invalid file type in photo(s). Allowed: JPG, PNG, GIF.']);
+                        }
+                    }
+                }
+            }
+        }
+
         // Handle profile image upload
         if ($request->hasFile('profile_image')) {
-            try {
-                $image = $request->file('profile_image');
-                $imageName = time() . '_' . $fighter->id . '.' . $image->getClientOriginalExtension();
-
-                // Store in public disk under fighters directory
+            $image = $request->file('profile_image');
+            $imageName = time() . '_' . $fighter->id . '.' . $image->getClientOriginalExtension();
+            if ($hasFileinfo) {
                 $path = $image->storeAs('fighters', $imageName, 'public');
                 $validatedData['profile_image'] = '/storage/' . $path;
-            } catch (\Error $e) {
-                // Handle "Class finfo not found" error
-                if (strpos($e->getMessage(), 'finfo') !== false) {
-                    \Log::error('fileinfo extension not available on server', [
-                        'error' => $e->getMessage(),
-                        'user_id' => auth()->id()
-                    ]);
-                    return back()->withErrors(['profile_image' => 'File upload failed. Please contact administrator - fileinfo extension required.']);
+            } else {
+                $dir = storage_path('app/public/fighters');
+                if (!is_dir($dir)) {
+                    @mkdir($dir, 0755, true);
                 }
-                throw $e;
+                $dest = $dir . '/' . $imageName;
+                if (move_uploaded_file($image->getRealPath(), $dest)) {
+                    $validatedData['profile_image'] = '/storage/fighters/' . $imageName;
+                }
             }
         }
 
@@ -157,33 +182,36 @@ class ProfileController extends Controller
             return $file && $file->isValid();
         })) : [];
         if (!empty($uploadedPhotos)) {
-            try {
-                $currentPhotoCount = $fighter->photos()->count();
-                $maxPhotos = 3 - $currentPhotoCount;
+            $currentPhotoCount = $fighter->photos()->count();
+            $maxPhotos = 3 - $currentPhotoCount;
+            $toProcess = array_slice($uploadedPhotos, 0, $maxPhotos);
 
-                $toProcess = array_slice($uploadedPhotos, 0, $maxPhotos);
-                foreach ($toProcess as $index => $photo) {
-                    $photoName = time() . '_' . $fighter->id . '_photo_' . ($currentPhotoCount + $index + 1) . '.' . $photo->getClientOriginalExtension();
+            $photosDir = null;
+            if (!$hasFileinfo) {
+                $photosDir = storage_path('app/public/fighters/photos');
+                if (!is_dir($photosDir)) {
+                    @mkdir($photosDir, 0755, true);
+                }
+            }
 
+            foreach ($toProcess as $index => $photo) {
+                $photoName = time() . '_' . $fighter->id . '_photo_' . ($currentPhotoCount + $index + 1) . '.' . $photo->getClientOriginalExtension();
+                if ($hasFileinfo) {
                     $path = $photo->storeAs('fighters/photos', $photoName, 'public');
-
-                    FighterPhoto::create([
-                        'fighter_id' => $fighter->id,
-                        'photo_path' => $path,
-                        'photo_name' => $photo->getClientOriginalName(),
-                        'is_primary' => ($currentPhotoCount + $index) === 0 && !$fighter->photos()->exists(),
-                        'sort_order' => $currentPhotoCount + $index,
-                    ]);
+                } else {
+                    $dest = $photosDir . '/' . $photoName;
+                    if (!move_uploaded_file($photo->getRealPath(), $dest)) {
+                        continue;
+                    }
+                    $path = 'fighters/photos/' . $photoName;
                 }
-            } catch (\Error $e) {
-                if (strpos($e->getMessage(), 'finfo') !== false) {
-                    \Log::error('fileinfo extension not available on server', [
-                        'error' => $e->getMessage(),
-                        'user_id' => auth()->id()
-                    ]);
-                    return back()->withErrors(['fighter_photos' => 'Photo upload failed. Please contact administrator - fileinfo extension required.']);
-                }
-                throw $e;
+                FighterPhoto::create([
+                    'fighter_id' => $fighter->id,
+                    'photo_path' => $path,
+                    'photo_name' => $photo->getClientOriginalName(),
+                    'is_primary' => ($currentPhotoCount + $index) === 0 && !$fighter->photos()->exists(),
+                    'sort_order' => $currentPhotoCount + $index,
+                ]);
             }
         }
 

@@ -50,14 +50,14 @@
                                         <!-- Photo Upload Section -->
                                         <div class="photo-upload-section">
                                             <div class="form-group">
-                                                <label for="fighter_photos">Add Photos (Maximum 3 total)</label>
+                                                <label for="fighter_photos" class="h5 mb-2">Add Photos (Maximum 3 total)</label>
                                                 <input type="file" id="fighter_photos" name="fighter_photos[]"
-                                                       class="form-control" accept="image/*" multiple
+                                                       class="form-control form-control-lg" accept="image/*" multiple
                                                        {{ ($fighter->photos->count() ?? 0) >= 3 ? 'disabled' : '' }}>
-                                                <small class="form-text text-muted">
-                                                    You can upload up to {{ 3 - ($fighter->photos->count() ?? 0) }} more photos.
-                                                    JPG, PNG or GIF. Max 2MB each.
-                                                </small>
+                                                <p class="mt-2 mb-0" style="font-size: 1.15rem;">
+                                                    <span class="text-danger font-weight-bold">Click here to upload photo.</span>
+                                                    You can upload up to {{ 3 - ($fighter->photos->count() ?? 0) }} more. JPG, PNG or GIF. Max 2MB each.
+                                                </p>
                                                 <div id="photoUploadStatus" class="mt-2 text-info"></div>
                                             </div>
                                         </div>

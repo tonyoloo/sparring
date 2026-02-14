@@ -48,7 +48,9 @@ class FighterPhoto extends Model
      */
     public function getPhotoUrlAttribute(): string
     {
-        return asset('storage/' . $this->photo_path);
+        $path = $this->attributes['photo_path'] ?? '';
+        $path = ltrim(str_replace('\\', '/', $path), '/');
+        return $path ? asset('storage/' . $path) : '';
     }
 
     /**

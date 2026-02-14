@@ -20,6 +20,22 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+// Serve stored files when public/storage symlink is missing (e.g. Windows/nginx)
+Route::get('/storage/{path}', function ($path) {
+    $path = str_replace(['../', '..\\'], '', $path);
+    $fullPath = storage_path('app/public/' . $path);
+    $publicRoot = realpath(storage_path('app/public'));
+    $resolved = realpath($fullPath);
+    if (!$publicRoot || !$resolved || !is_file($resolved)) {
+        abort(404);
+    }
+    $root = $publicRoot . DIRECTORY_SEPARATOR;
+    if (strpos($resolved, $root) !== 0) {
+        abort(404);
+    }
+    return response()->file($resolved);
+})->where('path', '.*')->name('storage.serve');
+
 
 Route::any('/birthcertificatevalidation', function () {
     return view('birthcertificatevalidation');

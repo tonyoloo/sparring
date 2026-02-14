@@ -61,8 +61,6 @@
                                                 <div id="photoUploadStatus" class="mt-2 text-info"></div>
                                             </div>
                                         </div>
-                                    </div>
-                                </div>
 
                                 <!-- Basic Info -->
                                 <div class="row">

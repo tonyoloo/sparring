@@ -151,35 +151,31 @@ class ProfileController extends Controller
             }
         }
 
-        // Handle multiple fighter photos upload
-        if ($request->hasFile('fighter_photos')) {
+        // Handle multiple fighter photos upload (array input: name="fighter_photos[]")
+        $uploadedPhotos = $request->file('fighter_photos');
+        $uploadedPhotos = is_array($uploadedPhotos) ? array_values(array_filter($uploadedPhotos, function ($file) {
+            return $file && $file->isValid();
+        })) : [];
+        if (!empty($uploadedPhotos)) {
             try {
                 $currentPhotoCount = $fighter->photos()->count();
-                $uploadedPhotos = $request->file('fighter_photos');
                 $maxPhotos = 3 - $currentPhotoCount;
 
-                // Only process if we haven't exceeded the limit
-                if (count($uploadedPhotos) <= $maxPhotos) {
-                    foreach ($uploadedPhotos as $index => $photo) {
-                        $photoName = time() . '_' . $fighter->id . '_photo_' . ($currentPhotoCount + $index + 1) . '.' . $photo->getClientOriginalExtension();
+                $toProcess = array_slice($uploadedPhotos, 0, $maxPhotos);
+                foreach ($toProcess as $index => $photo) {
+                    $photoName = time() . '_' . $fighter->id . '_photo_' . ($currentPhotoCount + $index + 1) . '.' . $photo->getClientOriginalExtension();
 
-                        // Store in public disk under fighters/photos directory
-                        $path = $photo->storeAs('fighters/photos', $photoName, 'public');
+                    $path = $photo->storeAs('fighters/photos', $photoName, 'public');
 
-                        // Create the photo record
-                        FighterPhoto::create([
-                            'fighter_id' => $fighter->id,
-                            'photo_path' => $path,
-                            'photo_name' => $photo->getClientOriginalName(),
-                            'is_primary' => ($currentPhotoCount + $index) === 0 && !$fighter->photos()->exists(), // First photo is primary if no photos exist
-                            'sort_order' => $currentPhotoCount + $index,
-                        ]);
-
-                        $currentPhotoCount++;
-                    }
+                    FighterPhoto::create([
+                        'fighter_id' => $fighter->id,
+                        'photo_path' => $path,
+                        'photo_name' => $photo->getClientOriginalName(),
+                        'is_primary' => ($currentPhotoCount + $index) === 0 && !$fighter->photos()->exists(),
+                        'sort_order' => $currentPhotoCount + $index,
+                    ]);
                 }
             } catch (\Error $e) {
-                // Handle "Class finfo not found" error
                 if (strpos($e->getMessage(), 'finfo') !== false) {
                     \Log::error('fileinfo extension not available on server', [
                         'error' => $e->getMessage(),
@@ -191,6 +187,7 @@ class ProfileController extends Controller
             }
         }
 
+        unset($validatedData['fighter_photos']);
         $fighter->update($validatedData);
 
         return back()->withStatus(__('Profile successfully updated.'));
